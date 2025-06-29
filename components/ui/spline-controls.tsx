@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Slider } from "@/components/ui/slider"
 import { RotateCcw, Camera, Lightbulb, Settings, X, RotateCw, ZoomIn, ZoomOut } from "lucide-react"
 
 interface SplineControlsProps {
@@ -198,9 +197,10 @@ export function SplineControls({ onCameraChange, onLightingChange, onReset, clas
               <div className="space-y-3">
                 <div>
                   <label className="text-white/80 text-sm mb-2 block">Position X</label>
-                  <Slider
-                    value={[camera.x]}
-                    onValueChange={([value]) => updateCamera({ x: value })}
+                  <input
+                    type="range"
+                    value={camera.x}
+                    onChange={(e) => updateCamera({ x: Number(e.target.value) })}
                     min={-10}
                     max={10}
                     step={0.1}
@@ -211,9 +211,10 @@ export function SplineControls({ onCameraChange, onLightingChange, onReset, clas
 
                 <div>
                   <label className="text-white/80 text-sm mb-2 block">Position Y</label>
-                  <Slider
-                    value={[camera.y]}
-                    onValueChange={([value]) => updateCamera({ y: value })}
+                  <input
+                    type="range"
+                    value={camera.y}
+                    onChange={(e) => updateCamera({ y: Number(e.target.value) })}
                     min={-10}
                     max={10}
                     step={0.1}
@@ -224,9 +225,10 @@ export function SplineControls({ onCameraChange, onLightingChange, onReset, clas
 
                 <div>
                   <label className="text-white/80 text-sm mb-2 block">Distance</label>
-                  <Slider
-                    value={[camera.z]}
-                    onValueChange={([value]) => updateCamera({ z: value })}
+                  <input
+                    type="range"
+                    value={camera.z}
+                    onChange={(e) => updateCamera({ z: Number(e.target.value) })}
                     min={1}
                     max={20}
                     step={0.1}
@@ -237,9 +239,10 @@ export function SplineControls({ onCameraChange, onLightingChange, onReset, clas
 
                 <div>
                   <label className="text-white/80 text-sm mb-2 block">Zoom</label>
-                  <Slider
-                    value={[camera.zoom]}
-                    onValueChange={([value]) => updateCamera({ zoom: value })}
+                  <input
+                    type="range"
+                    value={camera.zoom}
+                    onChange={(e) => updateCamera({ zoom: Number(e.target.value) })}
                     min={0.5}
                     max={3}
                     step={0.1}
@@ -276,9 +279,10 @@ export function SplineControls({ onCameraChange, onLightingChange, onReset, clas
               <div className="space-y-3">
                 <div>
                   <label className="text-white/80 text-sm mb-2 block">Light Intensity</label>
-                  <Slider
-                    value={[lighting.intensity]}
-                    onValueChange={([value]) => updateLighting({ intensity: value })}
+                  <input
+                    type="range"
+                    value={lighting.intensity}
+                    onChange={(e) => updateLighting({ intensity: Number(e.target.value) })}
                     min={0}
                     max={3}
                     step={0.1}
@@ -289,9 +293,10 @@ export function SplineControls({ onCameraChange, onLightingChange, onReset, clas
 
                 <div>
                   <label className="text-white/80 text-sm mb-2 block">Ambient Light</label>
-                  <Slider
-                    value={[lighting.ambientIntensity]}
-                    onValueChange={([value]) => updateLighting({ ambientIntensity: value })}
+                  <input
+                    type="range"
+                    value={lighting.ambientIntensity}
+                    onChange={(e) => updateLighting({ ambientIntensity: Number(e.target.value) })}
                     min={0}
                     max={1}
                     step={0.05}
@@ -302,9 +307,10 @@ export function SplineControls({ onCameraChange, onLightingChange, onReset, clas
 
                 <div>
                   <label className="text-white/80 text-sm mb-2 block">Shadow Intensity</label>
-                  <Slider
-                    value={[lighting.shadowIntensity]}
-                    onValueChange={([value]) => updateLighting({ shadowIntensity: value })}
+                  <input
+                    type="range"
+                    value={lighting.shadowIntensity}
+                    onChange={(e) => updateLighting({ shadowIntensity: Number(e.target.value) })}
                     min={0}
                     max={1}
                     step={0.05}
