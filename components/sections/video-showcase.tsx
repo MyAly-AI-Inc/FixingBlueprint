@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
-import { motion } from "framer-motion"
+import { useState, useCallback } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { VideoPlayer } from "@/components/ui/video-player"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Play, Eye, Heart, Share2, ChevronLeft, ChevronRight } from "lucide-react"
+import { Play, Eye, Heart, Share2, ChevronLeft, ChevronRight, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface Video {
@@ -29,18 +29,36 @@ interface VideoShowcaseProps {
   title?: string
   description?: string
   className?: string
+  onVideoClick?: (video: Video) => void
 }
 
-export function VideoShowcase({ videos, layout = "grid", title, description, className }: VideoShowcaseProps) {
+export function VideoShowcase({
+  videos,
+  layout = "grid",
+  title,
+  description,
+  className,
+  onVideoClick,
+}: VideoShowcaseProps) {
   const [currentVideo, setCurrentVideo] = useState(0)
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
+  const [playingVideoId, setPlayingVideoId] = useState<string | null>(null)
 
-  const nextVideo = () => {
+  const nextVideo = useCallback(() => {
     setCurrentVideo((prev) => (prev + 1) % videos.length)
-  }
+  }, [videos.length])
 
-  const prevVideo = () => {
+  const prevVideo = useCallback(() => {
     setCurrentVideo((prev) => (prev - 1 + videos.length) % videos.length)
+  }, [videos.length])
+
+  // Handle empty videos array
+  if (!videos || videos.length === 0) {
+    return (
+      <div className={cn("flex flex-col items-center justify-center p-8 text-center", className)}>
+        <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
+        <p className="text-muted-foreground">No videos available</p>
+      </div>
+    )
   }
 
   const formatNumber = (num: number): string => {
@@ -52,6 +70,52 @@ export function VideoShowcase({ videos, layout = "grid", title, description, cla
     }
     return num.toString()
   }
+
+  const handleVideoClick = (video: Video) => {
+    if (onVideoClick) {
+      onVideoClick(video)
+    } else {
+      setPlayingVideoId(video.id)
+    }
+  }
+
+  // Video Thumbnail Component
+  const VideoThumbnail = ({ video }: { video: Video }) => (
+    <div
+      className="relative aspect-video bg-muted cursor-pointer group"
+      onClick={() => handleVideoClick(video)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          handleVideoClick(video)
+        }
+      }}
+      aria-label={`Play ${video.title}`}
+    >
+      {video.thumbnail ? (
+        <img
+          src={video.thumbnail || "/placeholder.svg"}
+          alt={video.title}
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800" />
+      )}
+
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-200 flex items-center justify-center">
+        <div className="opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200">
+          <div className="bg-black/60 rounded-full p-3">
+            <Play className="h-6 w-6 text-white fill-white" />
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">{video.duration}</div>
+    </div>
+  )
 
   if (layout === "featured") {
     const featured = videos[currentVideo]
@@ -66,15 +130,20 @@ export function VideoShowcase({ videos, layout = "grid", title, description, cla
         )}
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Featured Video */}
+          {/* Featured Video - Only one VideoPlayer instance */}
           <div className="lg:col-span-2">
-            <VideoPlayer
-              src={featured.src}
-              title={featured.title}
-              description={featured.description}
-              aspectRatio="16:9"
-              glassEffect={true}
-            />
+            {playingVideoId === featured.id ? (
+              <VideoPlayer
+                src={featured.src}
+                title={featured.title}
+                description={featured.description}
+                aspectRatio="16:9"
+                glassEffect={true}
+                autoPlay={true}
+              />
+            ) : (
+              <VideoThumbnail video={featured} />
+            )}
 
             <div className="mt-4 space-y-4">
               <div className="flex items-start justify-between">
@@ -118,13 +187,26 @@ export function VideoShowcase({ videos, layout = "grid", title, description, cla
                     "cursor-pointer transition-all hover:shadow-md",
                     currentVideo === index && "ring-2 ring-primary",
                   )}
-                  onClick={() => setCurrentVideo(index)}
+                  onClick={() => {
+                    setCurrentVideo(index)
+                    setPlayingVideoId(null) // Reset playing video when switching
+                  }}
                 >
                   <CardContent className="p-3">
                     <div className="flex space-x-3">
                       <div className="relative w-24 h-16 bg-muted rounded overflow-hidden flex-shrink-0">
+                        {video.thumbnail ? (
+                          <img
+                            src={video.thumbnail || "/placeholder.svg"}
+                            alt={video.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800" />
+                        )}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <Play className="h-6 w-6 text-white" />
+                          <Play className="h-4 w-4 text-white opacity-80" />
                         </div>
                         <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-1 rounded">
                           {video.duration}
@@ -161,28 +243,36 @@ export function VideoShowcase({ videos, layout = "grid", title, description, cla
         )}
 
         <div className="relative">
-          <motion.div
-            key={currentVideo}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.3 }}
-          >
-            <VideoPlayer
-              src={videos[currentVideo].src}
-              title={videos[currentVideo].title}
-              description={videos[currentVideo].description}
-              aspectRatio="16:9"
-              glassEffect={true}
-            />
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentVideo}
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              transition={{ duration: 0.3 }}
+            >
+              {playingVideoId === videos[currentVideo].id ? (
+                <VideoPlayer
+                  src={videos[currentVideo].src}
+                  title={videos[currentVideo].title}
+                  description={videos[currentVideo].description}
+                  aspectRatio="16:9"
+                  glassEffect={true}
+                  autoPlay={true}
+                />
+              ) : (
+                <VideoThumbnail video={videos[currentVideo]} />
+              )}
+            </motion.div>
+          </AnimatePresence>
 
-          {/* Navigation */}
+          {/* Navigation with keyboard support */}
           <Button
             onClick={prevVideo}
             variant="outline"
             size="icon"
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20"
+            aria-label="Previous video"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -192,6 +282,7 @@ export function VideoShowcase({ videos, layout = "grid", title, description, cla
             variant="outline"
             size="icon"
             className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20"
+            aria-label="Next video"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -201,11 +292,15 @@ export function VideoShowcase({ videos, layout = "grid", title, description, cla
             {videos.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentVideo(index)}
+                onClick={() => {
+                  setCurrentVideo(index)
+                  setPlayingVideoId(null)
+                }}
                 className={cn(
                   "w-2 h-2 rounded-full transition-all",
-                  currentVideo === index ? "bg-white" : "bg-white/50",
+                  currentVideo === index ? "bg-white w-8" : "bg-white/50",
                 )}
+                aria-label={`Go to video ${index + 1}`}
               />
             ))}
           </div>
@@ -227,7 +322,7 @@ export function VideoShowcase({ videos, layout = "grid", title, description, cla
     )
   }
 
-  // Grid layout
+  // Grid layout - Most improved
   return (
     <div className={cn("space-y-8", className)}>
       {title && (
@@ -243,15 +338,10 @@ export function VideoShowcase({ videos, layout = "grid", title, description, cla
             key={video.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
+            transition={{ duration: 0.3, delay: Math.min(index * 0.1, 0.3) }}
           >
             <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="relative aspect-video bg-muted">
-                <VideoPlayer src={video.src} aspectRatio="16:9" controls={false} glassEffect={true} />
-                <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                  {video.duration}
-                </div>
-              </div>
+              <VideoThumbnail video={video} />
 
               <CardContent className="p-4">
                 <div className="space-y-3">
