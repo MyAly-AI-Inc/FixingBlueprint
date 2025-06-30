@@ -10,19 +10,19 @@ This is a minimal Next.js project containing only the homepage, `/aly`, and `/mi
 ## Getting Started
 
 Install dependencies:
-```sh
+\`\`\`sh
 npm install
-```
+\`\`\`
 
 Run the development server:
-```sh
+\`\`\`sh
 npm run dev
-```
+\`\`\`
 
 Build for production:
-```sh
+\`\`\`sh
 npm run build
-```
+\`\`\`
 
 ## Deployment
 You can deploy this project to Vercel, Netlify, or any platform that supports Next.js.
