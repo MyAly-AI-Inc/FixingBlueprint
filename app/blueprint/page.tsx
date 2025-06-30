@@ -268,13 +268,9 @@ export default function BlueprintPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3D%20Blueprint%20Opener%20%282%29.png-E8ylyrsSoITCEJey6o36bvWMsazRWZ.jpeg"
-                  alt="3D printing expert with multiple printers"
-                  width={600}
-                  height={400}
-                  className="w-full h-auto object-cover rounded-2xl"
-                />
+                <div className="w-full h-[400px] bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center">
+                  <Cube className="w-32 h-32 text-blue-300 opacity-50" />
+                </div>
               </motion.div>
             </div>
 
@@ -287,13 +283,9 @@ export default function BlueprintPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3D%20Design%20and%20Modeling%20Tools-ByYm60gvu3UkLe9nZXEXksxTJnCo3K.png"
-                  alt="3D Design and Modeling Tools"
-                  width={600}
-                  height={400}
-                  className="w-full h-auto object-cover rounded-2xl"
-                />
+                <div className="w-full h-[400px] bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl flex items-center justify-center">
+                  <Palette className="w-32 h-32 text-purple-300 opacity-50" />
+                </div>
               </motion.div>
 
               <motion.div
@@ -345,13 +337,9 @@ export default function BlueprintPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <Image
-                  src="/3d-printed-desk-organizer.png"
-                  alt="Entrepreneur selling 3D printed products"
-                  width={600}
-                  height={400}
-                  className="w-full h-auto object-cover rounded-2xl"
-                />
+                <div className="w-full h-[400px] bg-gradient-to-br from-green-600 to-green-800 rounded-2xl flex items-center justify-center">
+                  <Target className="w-32 h-32 text-green-300 opacity-50" />
+                </div>
               </motion.div>
             </div>
           </div>

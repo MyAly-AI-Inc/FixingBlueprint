@@ -27,7 +27,7 @@ export default function CommunityPage() {
                   }}
                   transition={{
                     duration: 8,
-                    repeat: Number.POSITIVE_INFINITY,
+                    repeat: Infinity,
                     repeatType: "reverse",
                   }}
                   style={{

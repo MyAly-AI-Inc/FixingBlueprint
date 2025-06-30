@@ -19,6 +19,10 @@ import {
   Grid3X3,
   List,
   Search,
+  X,
+  Copy,
+  Mail,
+  MessageCircle,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -42,6 +46,87 @@ export default function DreamlandPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [mounted, setMounted] = useState(false)
+  const [scale, setScale] = useState(1)
+  const [rotation, setRotation] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [likedArtworks, setLikedArtworks] = useState<Set<string>>(new Set())
+  const [showShareModal, setShowShareModal] = useState(false)
+  const [copiedLink, setCopiedLink] = useState(false)
+
+  // Animation effect for auto-rotation
+  useEffect(() => {
+    if (isPlaying) {
+      const interval = setInterval(() => {
+        setRotation((prev) => (prev + 1) % 360)
+      }, 50)
+      return () => clearInterval(interval)
+    }
+  }, [isPlaying])
+
+  // Handle fullscreen
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+      setIsFullscreen(true)
+    } else {
+      document.exitFullscreen()
+      setIsFullscreen(false)
+    }
+  }
+
+  // Handle zoom
+  const handleZoomIn = () => {
+    setScale((prev) => Math.min(prev + 0.2, 3))
+  }
+
+  const handleZoomOut = () => {
+    setScale((prev) => Math.max(prev - 0.2, 0.5))
+  }
+
+  // Handle reset
+  const handleReset = () => {
+    setScale(1)
+    setRotation(0)
+    setIsPlaying(true)
+  }
+
+  // Handle share gallery
+  const handleShareGallery = async () => {
+    setShowShareModal(true)
+  }
+
+  // Handle copy link
+  const handleCopyLink = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopiedLink(true)
+      setTimeout(() => setCopiedLink(false), 2000)
+    } catch (error) {
+      console.error('Failed to copy link:', error)
+    }
+  }
+
+  // Get share URL
+  const getShareUrl = (artworkId?: string) => {
+    if (typeof window !== 'undefined') {
+      const baseUrl = window.location.origin + window.location.pathname
+      return artworkId ? `${baseUrl}#${artworkId}` : baseUrl
+    }
+    return ''
+  }
+
+  // Handle like artwork
+  const handleLikeArtwork = (artworkId: string) => {
+    setLikedArtworks(prev => {
+      const newLikes = new Set(prev)
+      if (newLikes.has(artworkId)) {
+        newLikes.delete(artworkId)
+      } else {
+        newLikes.add(artworkId)
+      }
+      return newLikes
+    })
+  }
 
   // Fix SSR issue by only mounting on client
   useEffect(() => {
@@ -159,6 +244,85 @@ export default function DreamlandPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+      {/* Share Modal */}
+      <AnimatePresence>
+        {showShareModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowShareModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-gray-900 rounded-2xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold text-white">Share {selectedArtwork ? 'Artwork' : 'Gallery'}</h3>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowShareModal(false)}
+                  className="text-white hover:bg-white/10"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                <Button
+                  onClick={() => handleCopyLink(getShareUrl(selectedArtwork?.id))}
+                  className="w-full bg-white/10 hover:bg-white/20 text-white justify-start"
+                >
+                  <Copy className="h-4 w-4 mr-3" />
+                  {copiedLink ? 'Link Copied!' : 'Copy Link'}
+                </Button>
+
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    selectedArtwork 
+                      ? `Check out "${selectedArtwork.title}" in the Dreamland Gallery!` 
+                      : 'Check out this amazing AI art gallery!'
+                  )}&url=${encodeURIComponent(getShareUrl(selectedArtwork?.id))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white justify-start">
+                    <MessageCircle className="h-4 w-4 mr-3" />
+                    Share on Twitter
+                  </Button>
+                </a>
+
+                <a
+                  href={`mailto:?subject=${encodeURIComponent(
+                    selectedArtwork 
+                      ? `Check out this artwork: ${selectedArtwork.title}` 
+                      : 'Check out Dreamland Gallery'
+                  )}&body=${encodeURIComponent(
+                    `I thought you might enjoy this: ${getShareUrl(selectedArtwork?.id)}`
+                  )}`}
+                  className="block"
+                >
+                  <Button className="w-full bg-white/10 hover:bg-white/20 text-white justify-start">
+                    <Mail className="h-4 w-4 mr-3" />
+                    Share via Email
+                  </Button>
+                </a>
+              </div>
+
+              <div className="mt-4 p-3 bg-white/5 rounded-lg">
+                <p className="text-xs text-white/60 break-all">{getShareUrl(selectedArtwork?.id)}</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Navigation */}
       <nav className="bg-black/20 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
@@ -176,7 +340,11 @@ export default function DreamlandPage() {
 
             <div className="flex items-center space-x-3">
               <Badge className="bg-purple-600/20 text-purple-300 border-purple-500/30">AI Art Gallery</Badge>
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 bg-transparent">
+              <Button 
+                onClick={handleShareGallery}
+                variant="outline" 
+                className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+              >
                 <Share2 className="h-4 w-4 mr-2" />
                 Share Gallery
               </Button>
@@ -195,8 +363,7 @@ export default function DreamlandPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-blue-600/30 to-indigo-600/30">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
                   <div
-                    className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,rgba(147,51,234,0.1),rgba(59,130,246,0.1),rgba(147,51,234,0.1))] animate-spin"
-                    style={{ animationDuration: "20s" }}
+                    className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,rgba(147,51,234,0.1),rgba(59,130,246,0.1),rgba(147,51,234,0.1))]"
                   />
 
                   {/* Floating Particles - Fixed for SSR */}
@@ -216,7 +383,7 @@ export default function DreamlandPage() {
                         }}
                         transition={{
                           duration: 8 + (i % 4),
-                          repeat: Number.POSITIVE_INFINITY,
+                          repeat: Infinity,
                           delay: i * 0.2,
                         }}
                       />
@@ -235,10 +402,18 @@ export default function DreamlandPage() {
                   >
                     <div className="text-center space-y-6 max-w-2xl">
                       <div className="relative">
-                        <img
+                        <motion.img
                           src={selectedArtwork.thumbnail || "/placeholder.svg"}
                           alt={selectedArtwork.title}
                           className="w-64 h-64 mx-auto rounded-2xl shadow-2xl object-cover border-4 border-white/20"
+                          animate={{
+                            scale: scale,
+                            rotate: rotation,
+                          }}
+                          transition={{
+                            scale: { type: "spring", stiffness: 300 },
+                            rotate: { type: "tween", duration: 0.1 },
+                          }}
                         />
                         <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-3xl blur-xl" />
                       </div>
@@ -253,10 +428,19 @@ export default function DreamlandPage() {
                             <Eye className="h-4 w-4" />
                             <span>{formatNumber(selectedArtwork.views)}</span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <Heart className="h-4 w-4" />
-                            <span>{formatNumber(selectedArtwork.likes)}</span>
-                          </div>
+                          <button
+                            onClick={() => handleLikeArtwork(selectedArtwork.id)}
+                            className="flex items-center space-x-2 hover:text-white transition-colors"
+                          >
+                            <Heart 
+                              className={`h-4 w-4 transition-all ${
+                                likedArtworks.has(selectedArtwork.id) 
+                                  ? 'fill-red-500 text-red-500 scale-110' 
+                                  : ''
+                              }`} 
+                            />
+                            <span>{formatNumber(selectedArtwork.likes + (likedArtworks.has(selectedArtwork.id) ? 1 : 0))}</span>
+                          </button>
                         </div>
 
                         <div className="flex flex-wrap justify-center gap-2">
@@ -265,6 +449,31 @@ export default function DreamlandPage() {
                               {tag}
                             </Badge>
                           ))}
+                        </div>
+
+                        <div className="flex justify-center gap-4 mt-6">
+                          <Button
+                            onClick={() => handleLikeArtwork(selectedArtwork.id)}
+                            className={`${
+                              likedArtworks.has(selectedArtwork.id)
+                                ? 'bg-red-500 hover:bg-red-600'
+                                : 'bg-white/10 hover:bg-white/20'
+                            } text-white`}
+                          >
+                            <Heart 
+                              className={`h-4 w-4 mr-2 ${
+                                likedArtworks.has(selectedArtwork.id) ? 'fill-white' : ''
+                              }`} 
+                            />
+                            {likedArtworks.has(selectedArtwork.id) ? 'Liked' : 'Like'}
+                          </Button>
+                          <Button
+                            onClick={() => setShowShareModal(true)}
+                            className="bg-white/10 hover:bg-white/20 text-white"
+                          >
+                            <Share2 className="h-4 w-4 mr-2" />
+                            Share
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -277,30 +486,39 @@ export default function DreamlandPage() {
                     onClick={() => setIsPlaying(!isPlaying)}
                     size="sm"
                     className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20"
+                    title={isPlaying ? "Pause rotation" : "Play rotation"}
                   >
                     {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                   </Button>
                   <Button
+                    onClick={handleReset}
                     size="sm"
                     className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20"
+                    title="Reset view"
                   >
                     <RotateCcw className="h-4 w-4" />
                   </Button>
                   <Button
+                    onClick={handleZoomIn}
                     size="sm"
                     className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20"
+                    title="Zoom in"
                   >
                     <ZoomIn className="h-4 w-4" />
                   </Button>
                   <Button
+                    onClick={handleZoomOut}
                     size="sm"
                     className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20"
+                    title="Zoom out"
                   >
                     <ZoomOut className="h-4 w-4" />
                   </Button>
                   <Button
+                    onClick={toggleFullscreen}
                     size="sm"
                     className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20"
+                    title="Toggle fullscreen"
                   >
                     <Maximize2 className="h-4 w-4" />
                   </Button>
@@ -412,8 +630,22 @@ export default function DreamlandPage() {
                                 <Badge className="bg-purple-600/20 text-purple-300 text-xs">{artwork.category}</Badge>
                                 <div className="flex items-center space-x-2">
                                   <span>{formatNumber(artwork.views)}</span>
-                                  <Heart className="h-3 w-3" />
-                                  <span>{formatNumber(artwork.likes)}</span>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleLikeArtwork(artwork.id)
+                                    }}
+                                    className="hover:scale-110 transition-transform"
+                                  >
+                                    <Heart 
+                                      className={`h-3 w-3 ${
+                                        likedArtworks.has(artwork.id) 
+                                          ? 'fill-red-500 text-red-500' 
+                                          : ''
+                                      }`} 
+                                    />
+                                  </button>
+                                  <span>{formatNumber(artwork.likes + (likedArtworks.has(artwork.id) ? 1 : 0))}</span>
                                 </div>
                               </div>
                             </div>
