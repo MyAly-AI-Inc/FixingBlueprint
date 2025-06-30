@@ -87,8 +87,10 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? "bg-gray-900/95 backdrop-blur-md border-b border-gray-800/50 shadow-lg" : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
+          scrolled 
+            ? "bg-gray-900/95 backdrop-blur-xl border-b border-gray-800/50 shadow-lg" 
+            : "bg-gray-900/20 backdrop-blur-md border-b border-gray-800/30"
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -125,7 +127,7 @@ export function Navbar() {
                     className={`relative px-4 py-2 rounded-lg transition-all duration-200 group ${
                       isActive(link.href)
                         ? "bg-blue-600/20 text-blue-300"
-                        : "text-gray-300 hover:text-white hover:bg-white/5"
+                        : "text-gray-300 hover:text-white hover:bg-white/10"
                     }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -134,7 +136,7 @@ export function Navbar() {
                       {link.icon}
                       <span className="font-medium">{link.label}</span>
                       {link.badge && (
-                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs px-2 py-0.5">
+                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs px-2 py-0.5 shadow-sm">
                           {link.badge}
                         </Badge>
                       )}
@@ -152,7 +154,7 @@ export function Navbar() {
                     )}
 
                     {/* Hover tooltip */}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-1 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-1.5 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl">
                       {link.description}
                       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-800" />
                     </div>
@@ -169,10 +171,10 @@ export function Navbar() {
                   <motion.div whileTap={{ scale: 0.95 }}>
                     <Button
                       size="sm"
-                      className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-full px-6 py-2 font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-full px-6 py-2 font-medium shadow-lg hover:shadow-xl transition-all duration-300 border border-red-400/20"
                     >
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse shadow-sm" />
                         <span>Watch Live</span>
                       </div>
                     </Button>
@@ -201,18 +203,18 @@ export function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-40 lg:hidden"
+            className="fixed inset-0 z-[55] lg:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
             {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
 
             {/* Menu Panel - optimized for mobile */}
             <motion.div
-              className="absolute top-16 left-4 right-4 bg-gray-900/95 backdrop-blur-md border border-gray-800/50 rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto"
+              className="absolute top-16 left-4 right-4 bg-gray-900/98 backdrop-blur-xl border border-gray-800/50 rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -233,7 +235,7 @@ export function Navbar() {
                           className={`flex items-center space-x-3 p-4 rounded-xl transition-all duration-200 ${
                             isActive(link.href)
                               ? "bg-blue-600/20 text-blue-300 border border-blue-500/30"
-                              : "text-gray-300 hover:text-white hover:bg-white/5"
+                              : "text-gray-300 hover:text-white hover:bg-white/5 border border-transparent"
                           }`}
                           style={{ minHeight: "60px", touchAction: "manipulation" }}
                           whileTap={{ scale: 0.98 }}
@@ -268,11 +270,11 @@ export function Navbar() {
                     <motion.div whileTap={{ scale: 0.98 }}>
                       <Button
                         size="lg"
-                        className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-xl py-4 font-medium shadow-lg"
+                        className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-xl py-4 font-medium shadow-lg border border-red-400/20"
                         style={{ minHeight: "56px", touchAction: "manipulation" }}
                       >
                         <div className="flex items-center justify-center gap-3">
-                          <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
+                          <div className="w-3 h-3 bg-white rounded-full animate-pulse shadow-sm" />
                           <span className="text-lg">Watch Live Challenge</span>
                           <Play className="w-5 h-5" />
                         </div>

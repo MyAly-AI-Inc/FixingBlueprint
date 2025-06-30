@@ -1,20 +1,37 @@
 {
-  "name": "my-v0-project",
-  "version": "0.1.0",
+  "name": "3d-blueprint",
+  "version": "1.0.0",
   "private": true,
+  "description": "Learn 3D printing from beginner to advanced with free educational resources",
+  "keywords": [
+    "3d-printing",
+    "education",
+    "learning-platform",
+    "maker",
+    "diy",
+    "tutorial"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "private"
+  },
+  "license": "UNLICENSED",
+  "author": "Aly Yu",
   "scripts": {
     "build": "next build",
+    "clean": "rm -rf .next out node_modules",
     "dev": "next dev",
+    "format": "prettier --write .",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
     "@splinetool/react-spline": "latest",
-    "@splinetool/runtime": "latest",
-    "autoprefixer": "^10.4.20",
+    "@splinetool/runtime": "^0.9.506",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "expo": "latest",
@@ -25,12 +42,10 @@
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
     "next-themes": "latest",
-    "postcss": "^8.5",
     "react": "^19",
     "react-dom": "^19",
     "react-native": "latest",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "three": "latest"
   },
@@ -38,10 +53,14 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.30.0",
     "eslint-config-next": "15.3.4",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

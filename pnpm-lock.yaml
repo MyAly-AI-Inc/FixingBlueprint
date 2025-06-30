@@ -19,13 +19,10 @@ importers:
         version: 9.1.4(@types/react@19.0.0)(expo-asset@11.1.5(expo@53.0.13(@babel/core@7.27.7)(react-native@0.80.0(@babel/core@7.27.7)(@types/react@19.0.0)(react@19.0.0))(react@19.0.0))(react-native@0.80.0(@babel/core@7.27.7)(@types/react@19.0.0)(react@19.0.0))(react@19.0.0))(expo-file-system@18.1.10(expo@53.0.13(@babel/core@7.27.7)(react-native@0.80.0(@babel/core@7.27.7)(@types/react@19.0.0)(react@19.0.0))(react@19.0.0))(react-native@0.80.0(@babel/core@7.27.7)(@types/react@19.0.0)(react@19.0.0)))(expo-gl@15.1.6(expo@53.0.13(@babel/core@7.27.7)(react-native@0.80.0(@babel/core@7.27.7)(@types/react@19.0.0)(react@19.0.0))(react@19.0.0))(react-native@0.80.0(@babel/core@7.27.7)(@types/react@19.0.0)(react@19.0.0))(react@19.0.0))(expo@53.0.13(@babel/core@7.27.7)(react-native@0.80.0(@babel/core@7.27.7)(@types/react@19.0.0)(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react-native@0.80.0(@babel/core@7.27.7)(@types/react@19.0.0)(react@19.0.0))(react@19.0.0)(three@0.177.0)
       '@splinetool/react-spline':
         specifier: latest
-        version: 4.0.0(@splinetool/runtime@1.10.16)(next@15.2.4(@babel/core@7.27.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 4.0.0(@splinetool/runtime@0.9.506)(next@15.2.4(@babel/core@7.27.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@splinetool/runtime':
-        specifier: latest
-        version: 1.10.16
-      autoprefixer:
-        specifier: ^10.4.20
-        version: 10.4.20(postcss@8.5.0)
+        specifier: ^0.9.506
+        version: 0.9.506
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -56,9 +53,6 @@ importers:
       next-themes:
         specifier: latest
         version: 0.4.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      postcss:
-        specifier: ^8.5
-        version: 8.5.0
       react:
         specifier: ^19
         version: 19.0.0
@@ -71,9 +65,6 @@ importers:
       tailwind-merge:
         specifier: ^2.5.5
         version: 2.5.5
-      tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.17
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
@@ -90,12 +81,21 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.0.0
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.4.20(postcss@8.5.0)
       eslint:
         specifier: ^9.30.0
         version: 9.30.0(jiti@1.21.7)
       eslint-config-next:
         specifier: 15.3.4
         version: 15.3.4(eslint@9.30.0(jiti@1.21.7))(typescript@5.0.2)
+      postcss:
+        specifier: ^8.5
+        version: 8.5.0
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.17
       typescript:
         specifier: ^5
         version: 5.0.2
@@ -1150,8 +1150,8 @@ packages:
       next:
         optional: true
 
-  '@splinetool/runtime@1.10.16':
-    resolution: {integrity: sha512-K99owdek6hRx6s/qE/UBc7v76mzPQ9JTnHtkGgHl6EJkmjQ/gCoDLJFsfJ2Y1p0We9hBghecCoixPbAQIx8THg==}
+  '@splinetool/runtime@0.9.506':
+    resolution: {integrity: sha512-wJTsdR1OeaAMU/pyZHKp7bgG189Q/8sjszKhGU0Hk6o9DCiACJ2yoj6vS9pCVq2IrbI1NRIYn0GrarItfdp8dQ==}
 
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
@@ -5718,9 +5718,9 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@splinetool/react-spline@4.0.0(@splinetool/runtime@1.10.16)(next@15.2.4(@babel/core@7.27.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@splinetool/react-spline@4.0.0(@splinetool/runtime@0.9.506)(next@15.2.4(@babel/core@7.27.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@splinetool/runtime': 1.10.16
+      '@splinetool/runtime': 0.9.506
       blurhash: 2.0.5
       lodash.debounce: 4.0.8
       react: 19.0.0
@@ -5730,7 +5730,7 @@ snapshots:
     optionalDependencies:
       next: 15.2.4(@babel/core@7.27.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
 
-  '@splinetool/runtime@1.10.16':
+  '@splinetool/runtime@0.9.506':
     dependencies:
       on-change: 4.0.2
       semver-compare: 1.0.0

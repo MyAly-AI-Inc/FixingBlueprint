@@ -80,7 +80,7 @@ const JourneyCard = ({
     <CardHeader className="p-0">
       <div className="aspect-video relative">
         <Image
-          src={image || "/placeholder.svg"} // Already updated to use specific queries or actual images
+          src={image || "/placeholder.svg"}
           alt={imageAlt}
           fill
           className="object-cover"
@@ -113,40 +113,42 @@ const PricingCard = ({
   popular?: boolean
   enterprise?: boolean
 }) => (
-  <Card
-    className={`bg-gray-800/70 border-gray-700/50 text-white h-full flex flex-col ${popular ? "border-cyan-500 border-2 shadow-cyan-500/30 shadow-2xl" : ""}`}
-  >
-    {popular && (
-      <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyan-500 text-black px-3 py-1 text-sm font-semibold">
-        Most Popular
-      </Badge>
-    )}
-    <CardHeader className="pt-8">
-      <CardTitle className={`text-2xl font-bold ${popular ? "text-cyan-300" : "text-white"}`}>{title}</CardTitle>
-      <CardDescription className="text-blue-200">{description}</CardDescription>
-    </CardHeader>
-    <CardContent className="flex-grow">
-      <div className="text-4xl font-extrabold my-4">
-        {price}
-        {enterprise && <span className="text-base font-normal text-blue-300"> / custom</span>}
-      </div>
-      <ul className="space-y-2 mb-6">
-        {features.map((feature, i) => (
-          <li key={i} className="flex items-start">
-            <CheckCircle className="h-5 w-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
-            <span className="text-blue-200 text-sm">{feature}</span>
-          </li>
-        ))}
-      </ul>
-    </CardContent>
-    <CardFooter>
-      <Button
-        className={`w-full ${popular ? "bg-cyan-500 hover:bg-cyan-600 text-black" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
-      >
-        {ctaText}
-      </Button>
-    </CardFooter>
-  </Card>
+  <div className={`relative ${popular ? "pt-3" : ""}`}>
+    <Card
+      className={`bg-gray-800/70 border-gray-700/50 text-white h-full flex flex-col ${popular ? "border-cyan-500 border-2 shadow-cyan-500/30 shadow-2xl" : ""}`}
+    >
+      {popular && (
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+          <Badge className="bg-cyan-500 text-black px-3 py-1 text-sm font-semibold">Most Popular</Badge>
+        </div>
+      )}
+      <CardHeader className="pt-8">
+        <CardTitle className={`text-2xl font-bold ${popular ? "text-cyan-300" : "text-white"}`}>{title}</CardTitle>
+        <CardDescription className="text-blue-200">{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <div className="text-4xl font-extrabold my-4">
+          {price}
+          {enterprise && <span className="text-base font-normal text-blue-300"> / custom</span>}
+        </div>
+        <ul className="space-y-2 mb-6">
+          {features.map((feature, i) => (
+            <li key={i} className="flex items-start">
+              <CheckCircle className="h-5 w-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+              <span className="text-blue-200 text-sm">{feature}</span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+      <CardFooter>
+        <Button
+          className={`w-full ${popular ? "bg-cyan-500 hover:bg-cyan-600 text-black" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+        >
+          {ctaText}
+        </Button>
+      </CardFooter>
+    </Card>
+  </div>
 )
 
 const TestimonialCard = ({
@@ -165,7 +167,7 @@ const TestimonialCard = ({
       <Image src={image || "/placeholder.svg"} alt={imageAlt} width={48} height={48} className="rounded-full mr-4" />
       <CardTitle className="text-lg text-cyan-300">{name}</CardTitle>
     </div>
-    <CardDescription className="text-blue-200 italic">"{quote}"</CardDescription>
+    <CardDescription className="text-blue-200 italic">&quot;{quote}&quot;</CardDescription>
   </Card>
 )
 
@@ -324,7 +326,7 @@ export default function MiniBlueprintPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="text-white border-white hover:bg-white/10 rounded-full px-8 py-3 text-lg"
+                className="text-white border-white hover:bg-white/10 rounded-full px-8 py-3 text-lg bg-transparent"
               >
                 Browse All Blueprints
               </Button>
@@ -358,6 +360,7 @@ export default function MiniBlueprintPage() {
           </motion.div>
         </div>
       </section>
+
       {/* Complete System Section */}
       <section className="py-16 bg-gray-800/30">
         <div className="container mx-auto px-4">
@@ -402,6 +405,7 @@ export default function MiniBlueprintPage() {
           </div>
         </div>
       </section>
+
       {/* Why Aly Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
@@ -410,7 +414,7 @@ export default function MiniBlueprintPage() {
               Why Aly?
             </AnimatedGradientHeading>
             <p className="text-xl text-blue-200 max-w-2xl mx-auto">
-              With a proven track record of helping creators succeed, you're in good hands.
+              With a proven track record of helping creators succeed, you&apos;re in good hands.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -445,6 +449,7 @@ export default function MiniBlueprintPage() {
           </div>
         </div>
       </section>
+
       {/* Message from Founder */}
       <section className="py-16 bg-gray-800/30">
         <div className="container mx-auto px-4">
@@ -474,20 +479,21 @@ export default function MiniBlueprintPage() {
               <AnimatedGradientHeading fromColor="from-cyan-400" toColor="to-blue-500" className="text-left">
                 A Message from the Founder
               </AnimatedGradientHeading>
-              <p className="text-xl font-semibold text-white mb-4">Hey there! I'm Aly.</p>
+              <p className="text-xl font-semibold text-white mb-4">Hey there! I&apos;m Aly.</p>
               <p className="text-blue-200 mb-4">
                 I created this blueprint to empower creators and entrepreneurs who want to turn their creativity into
                 income. After building my own successful 3D printing studio and helping hundreds of entrepreneurs,
-                I've distilled my insights into this comprehensive guide.
+                I&apos;ve distilled my insights into this comprehensive guide.
               </p>
               <p className="text-blue-200">
-                No matter your background or starting budget, this blueprint will show you how to transform 3D
-                printing from a hobby into a profitable business.
+                No matter your background or starting budget, this blueprint will show you how to transform 3D printing
+                from a hobby into a profitable business.
               </p>
             </motion.div>
           </div>
         </div>
       </section>
+
       {/* My Journey Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
@@ -517,6 +523,7 @@ export default function MiniBlueprintPage() {
           </div>
         </div>
       </section>
+
       {/* Why I Created This / My Mission */}
       <section className="py-16 bg-gray-800/30">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
@@ -537,9 +544,9 @@ export default function MiniBlueprintPage() {
             </div>
             <h3 className="text-2xl font-bold text-white mt-6 mb-3">Why I Created This Blueprint</h3>
             <p className="text-blue-200">
-              I designed this blueprint because it's what I needed when I was starting out. It's the culmination of
-              everything I've learned about starting and growing a 3D printing business. It's the step-by-step guide
-              that I wish I had.
+              I designed this blueprint because it&apos;s what I needed when I was starting out. It&apos;s the
+              culmination of everything I&apos;ve learned about starting and growing a 3D printing business. It&apos;s
+              the step-by-step guide that I wish I had.
             </p>
             <p className="text-blue-200 mt-2">MyAly.ai - The Future of 3D Printing</p>
           </motion.div>
@@ -560,15 +567,15 @@ export default function MiniBlueprintPage() {
             </div>
             <h3 className="text-2xl font-bold text-white mt-6 mb-3">My Mission</h3>
             <p className="text-blue-200 mb-3">
-              My journey started in August 2024 with a single $300 printer, selling keychains to friends. What began
-              as a side hustle to help pay for college transformed into a thriving business generating over $20K
-              monthly. Who knew my Philosophy and Art History degree would become such a valuable asset in this
-              industry? This unique perspective helped me design viral products and expand globally.
+              My journey started in August 2024 with a single $300 printer, selling keychains to friends. What began as
+              a side hustle to help pay for college transformed into a thriving business generating over $20K monthly.
+              Who knew my Philosophy and Art History degree would become such a valuable asset in this industry? This
+              unique perspective helped me design viral products and expand globally.
             </p>
             <p className="text-blue-200 mb-3">
-              Now, it's my turn to help others discover the freedom that 3D printing creates. I'm sharing everything
-              I've learned about building a profitable business in this industry. My mission is simple: help creative
-              people like you turn your ideas into income.
+              Now, it&apos;s my turn to help others discover the freedom that 3D printing creates. I&apos;m sharing
+              everything I&apos;ve learned about building a profitable business in this industry. My mission is simple:
+              help creative people like you turn your ideas into income.
             </p>
             <p className="text-cyan-300 font-semibold">
               If I could start with $500 and build this, imagine what you could create with the right blueprint!
@@ -576,6 +583,7 @@ export default function MiniBlueprintPage() {
           </motion.div>
         </div>
       </section>
+
       {/* Brain Behind Blueprint */}
       <section className="py-16">
         <div className="container mx-auto px-4 text-center">
@@ -588,12 +596,12 @@ export default function MiniBlueprintPage() {
           />
           <h2 className="text-sm uppercase tracking-wider text-purple-400 mb-2">The Brain Behind The Blueprint</h2>
           <AnimatedGradientHeading fromColor="from-purple-400" toColor="to-pink-500" className="mb-4">
-            Hey I'm Aly, Your 3D Printing Mentor
+            Hey I&apos;m Aly, Your 3D Printing Mentor
           </AnimatedGradientHeading>
           <p className="text-xl text-blue-200 max-w-2xl mx-auto mb-6">
-            From a single $300 printer to a thriving $20K+/month business, I've learned what it takes to succeed in 3D
-            printing. But the journey would have been so much easier if I knew all the things I do now. So now I'm
-            sharing my blueprint to help you build your own profitable business.
+            From a single $300 printer to a thriving $20K+/month business, I&apos;ve learned what it takes to succeed in
+            3D printing. But the journey would have been so much easier if I knew all the things I do now. So now
+            I&apos;m sharing my blueprint to help you build your own profitable business.
           </p>
           <div className="flex gap-4 justify-center">
             <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6">
@@ -601,13 +609,14 @@ export default function MiniBlueprintPage() {
             </Button>
             <Button
               variant="outline"
-              className="text-pink-400 border-pink-400 hover:bg-pink-400/10 rounded-full px-6"
+              className="text-pink-400 border-pink-400 hover:bg-pink-400/10 rounded-full px-6 bg-transparent"
             >
               <Instagram className="mr-2 h-4 w-4" /> Follow on Instagram
             </Button>
           </div>
         </div>
       </section>
+
       {/* Choose Your Path Section */}
       <section id="free-guide" className="py-16 bg-gray-800/30">
         <div className="container mx-auto px-4">
@@ -676,6 +685,7 @@ export default function MiniBlueprintPage() {
           </div>
         </div>
       </section>
+
       {/* Testimonials Section */}
       <section id="testimonials" className="py-16">
         <div className="container mx-auto px-4">
@@ -706,6 +716,7 @@ export default function MiniBlueprintPage() {
           </div>
         </div>
       </section>
+
       {/* Commercial License Offer Section */}
       <section className="py-16 bg-gray-800/30">
         <div className="container mx-auto px-4 text-center">
@@ -714,12 +725,12 @@ export default function MiniBlueprintPage() {
             Get Free Lifetime Commercial Licenses!
           </AnimatedGradientHeading>
           <p className="text-xl text-blue-200 max-w-3xl mx-auto mb-8">
-            Unlock commercial rights for my top-selling 3D models, including the popular 5-in-1 Phone Stand, Cat
-            Masks, and more!
+            Unlock commercial rights for my top-selling 3D models, including the popular 5-in-1 Phone Stand, Cat Masks,
+            and more!
             <br />
             <span className="text-sm">
               *Commercial license allows selling physical prints on platforms like Etsy, Shopify, and anywhere else
-              you'd like! You keep 100% of each sale with no royalties or fees.
+              you&apos;d like! You keep 100% of each sale with no royalties or fees.
             </span>
           </p>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -739,9 +750,7 @@ export default function MiniBlueprintPage() {
                 <li>Optimized for POV shots and close-ups</li>
                 <li>Multi-functional design</li>
               </ul>
-              <Button className="bg-cyan-500 hover:bg-cyan-600 text-black w-full">
-                Claim Free Commercial License
-              </Button>
+              <Button className="bg-cyan-500 hover:bg-cyan-600 text-black w-full">Claim Free Commercial License</Button>
             </Card>
             <Card className="bg-gray-900/50 border-gray-700/50 text-white p-6">
               <div className="relative w-full h-48 mb-4">
@@ -765,6 +774,7 @@ export default function MiniBlueprintPage() {
           </div>
         </div>
       </section>
+
       {/* 3 Simple Steps Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
@@ -773,8 +783,7 @@ export default function MiniBlueprintPage() {
               Start Profiting in 3 Simple Steps
             </AnimatedGradientHeading>
             <p className="text-xl text-blue-200 max-w-2xl mx-auto">
-              Follow this easy process to go from complete beginner to running your own profitable 3D printing
-              business.
+              Follow this easy process to go from complete beginner to running your own profitable 3D printing business.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -819,6 +828,7 @@ export default function MiniBlueprintPage() {
           </div>
         </div>
       </section>
+
       {/* Final CTA Section */}
       <section className="py-20 bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800">
         <div className="container mx-auto px-4 text-center">
@@ -837,13 +847,14 @@ export default function MiniBlueprintPage() {
             <Button
               size="lg"
               variant="outline"
-              className="text-white border-white hover:bg-white/10 rounded-full px-8 py-3 text-lg"
+              className="text-white border-white hover:bg-white/10 rounded-full px-8 py-3 text-lg bg-transparent"
             >
               Get The Full Blueprint
             </Button>
           </div>
         </div>
       </section>
+
       {/* FAQ Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
@@ -865,6 +876,7 @@ export default function MiniBlueprintPage() {
           </div>
         </div>
       </section>
+
       {/* Interactive Profit Calculator Section */}
       <section className="py-16 bg-gray-800/30">
         <div className="container mx-auto px-4">
@@ -874,8 +886,7 @@ export default function MiniBlueprintPage() {
               Interactive Profit Calculator
             </AnimatedGradientHeading>
             <p className="text-xl text-blue-200 max-w-2xl mx-auto">
-              See your potential earnings with different 3D printing products. Adjust the settings to match your
-              goals.
+              See your potential earnings with different 3D printing products. Adjust the settings to match your goals.
             </p>
           </div>
 
@@ -911,8 +922,6 @@ export default function MiniBlueprintPage() {
                       ))}
                     </select>
                     <div className="mt-2 text-sm text-gray-300">
-                      {" "}
-                      {/* Increased font size and contrast slightly */}
                       Sell: ${selectedProduct.sell} • Cost: ${selectedProduct.cost} • {selectedProduct.time}h print •{" "}
                       {selectedProduct.difficulty} • {selectedProduct.demand}
                     </div>
@@ -1013,10 +1022,13 @@ export default function MiniBlueprintPage() {
           </Card>
         </div>
       </section>
+
       {/* Final CTA (repeated from above, common for landing pages) */}
       <section className="py-20 bg-gradient-to-r from-purple-700 to-pink-700">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">Don't Wait – Start Your 3D Printing Journey Today!</h2>
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Don&apos;t Wait – Start Your 3D Printing Journey Today!
+          </h2>
           <p className="text-xl text-pink-100 mb-10 max-w-2xl mx-auto">
             Join thousands of creators who have transformed their hobby into a thriving business with my proven
             blueprint.
@@ -1031,7 +1043,7 @@ export default function MiniBlueprintPage() {
             <Button
               size="lg"
               variant="outline"
-              className="text-white border-white hover:bg-white/10 rounded-full px-8 py-3 text-lg"
+              className="text-white border-white hover:bg-white/10 rounded-full px-8 py-3 text-lg bg-transparent"
             >
               Browse All Blueprints
             </Button>
