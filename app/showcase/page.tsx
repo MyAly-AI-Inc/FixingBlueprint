@@ -2,320 +2,279 @@
 
 import { motion } from "framer-motion"
 import { VideoPlayer } from "@/components/ui/video-player"
-import { VideoShowcase } from "@/components/sections/video-showcase"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, Download, Share2, Eye, Heart, Clock, User, Calendar, Tag } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { ArrowLeft, Share2, Download, Heart, Eye, Clock, User, Calendar, Play } from "lucide-react"
 import Link from "next/link"
 
 export default function ShowcasePage() {
-  const mainVideo = {
-    src: "/videos/social-transformation.mp4",
-    title: "Social Transformation",
+  const featuredVideo = {
+    id: "social-transformation",
+    title: "The Future of Social Transformation",
     description:
-      "An AI-generated video showcasing the evolution of digital consciousness and social interaction patterns.",
-    duration: "2:34",
-    views: 15420,
-    likes: 892,
-    category: "AI Art",
-    creator: "Digital Collective",
-    uploadDate: "2024-01-15",
+      "Explore how AI and technology are reshaping our social fabric and creating new possibilities for human connection and collaboration.",
+    src: "/videos/social-transformation.mp4",
+    duration: "12:34",
+    views: 45600,
+    likes: 2340,
+    category: "Technology",
+    author: "Dr. Sarah Chen",
+    publishedAt: "2 days ago",
+    tags: ["AI", "Social Impact", "Future Tech", "Innovation"],
   }
 
   const relatedVideos = [
     {
-      id: "1",
-      src: "/videos/social-transformation.mp4",
-      poster: "/placeholder.svg?height=180&width=320",
-      title: "Digital Evolution",
-      description: "Exploring the transformation of digital landscapes",
-      duration: "3:21",
-      views: 8500,
-      likes: 456,
-      category: "Abstract",
+      id: "ai-ethics",
+      title: "AI Ethics in Modern Society",
+      author: "Prof. Michael Rodriguez",
+      duration: "8:45",
+      views: 23400,
+      thumbnail: "/placeholder.svg?height=120&width=200",
     },
     {
-      id: "2",
-      src: "/videos/social-transformation.mp4",
-      poster: "/placeholder.svg?height=180&width=320",
-      title: "Neural Networks",
-      description: "Visualizing artificial intelligence patterns",
-      duration: "2:45",
-      views: 12300,
-      likes: 678,
-      category: "Technology",
+      id: "digital-transformation",
+      title: "Digital Transformation Strategies",
+      author: "Emma Wilson",
+      duration: "15:20",
+      views: 18900,
+      thumbnail: "/placeholder.svg?height=120&width=200",
     },
     {
-      id: "3",
-      src: "/videos/social-transformation.mp4",
-      poster: "/placeholder.svg?height=180&width=320",
-      title: "Quantum Dreams",
-      description: "A journey through quantum computing visualization",
-      duration: "4:12",
-      views: 9800,
-      likes: 534,
-      category: "Science",
+      id: "future-work",
+      title: "The Future of Work and AI",
+      author: "David Kim",
+      duration: "11:15",
+      views: 31200,
+      thumbnail: "/placeholder.svg?height=120&width=200",
+    },
+    {
+      id: "tech-society",
+      title: "Technology's Impact on Society",
+      author: "Dr. Aisha Patel",
+      duration: "9:30",
+      views: 27800,
+      thumbnail: "/placeholder.svg?height=120&width=200",
     },
   ]
 
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) {
+      return `${(num / 1000000).toFixed(1)}M`
+    }
+    if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`
+    }
+    return num.toString()
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Navigation */}
-      <nav className="bg-black/20 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
+      <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/">
-                <Button variant="ghost" className="text-white hover:bg-white/10">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Home
-                </Button>
-              </Link>
-              <div className="h-6 w-px bg-white/20" />
-              <h1 className="text-white font-semibold text-lg">Video Showcase</h1>
-            </div>
+            <Link href="/">
+              <Button variant="ghost" className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
 
-            <div className="flex items-center space-x-3">
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 bg-transparent">
+            <div className="flex items-center space-x-4">
+              <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Video Showcase</Badge>
+              <Button variant="outline" size="sm">
                 <Share2 className="h-4 w-4 mr-2" />
                 Share
-              </Button>
-              <Button className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700">
-                <Download className="h-4 w-4 mr-2" />
-                Download
               </Button>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Main Video */}
-          <div className="lg:col-span-2">
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Video Section */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Video Player */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <VideoPlayer
-                src={mainVideo.src}
-                title={mainVideo.title}
-                glassEffect="dark"
+                src={featuredVideo.src}
+                title={featuredVideo.title}
+                description={featuredVideo.description}
                 aspectRatio="16:9"
-                className="mb-6"
+                glassEffect={true}
+                className="w-full"
               />
+            </motion.div>
 
-              {/* Video Info */}
-              <div className="space-y-6">
-                <div>
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h1 className="text-3xl font-bold text-white mb-2">{mainVideo.title}</h1>
-                      <p className="text-white/70 text-lg leading-relaxed">{mainVideo.description}</p>
-                    </div>
-                    <Badge className="bg-purple-600/20 text-purple-300 border-purple-500/30">
-                      {mainVideo.category}
-                    </Badge>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="flex items-center space-x-6 text-white/60">
-                    <div className="flex items-center space-x-2">
-                      <Eye className="h-5 w-5" />
-                      <span>{mainVideo.views.toLocaleString()} views</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Heart className="h-5 w-5" />
-                      <span>{mainVideo.likes.toLocaleString()} likes</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Clock className="h-5 w-5" />
-                      <span>{mainVideo.duration}</span>
-                    </div>
-                  </div>
+            {/* Video Information */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="space-y-6"
+            >
+              {/* Title and Actions */}
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                <div className="space-y-2">
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                    {featuredVideo.title}
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{featuredVideo.description}</p>
                 </div>
 
-                {/* Creator Info */}
-                <Card className="bg-white/5 backdrop-blur-md border-white/10">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                        <User className="h-6 w-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-white font-semibold">{mainVideo.creator}</h3>
-                        <div className="flex items-center space-x-4 text-sm text-white/60 mt-1">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="h-4 w-4" />
-                            <span>Uploaded {new Date(mainVideo.uploadDate).toLocaleDateString()}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Tag className="h-4 w-4" />
-                            <span>{mainVideo.category}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 bg-transparent">
+                <div className="flex items-center space-x-3">
+                  <Button className="bg-red-600 hover:bg-red-700 text-white">
+                    <Heart className="h-4 w-4 mr-2" />
+                    Like
+                  </Button>
+                  <Button variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Save
+                  </Button>
+                </div>
+              </div>
+
+              {/* Video Stats */}
+              <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex items-center space-x-2">
+                  <Eye className="h-4 w-4" />
+                  <span>{formatNumber(featuredVideo.views)} views</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Heart className="h-4 w-4" />
+                  <span>{formatNumber(featuredVideo.likes)} likes</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-4 w-4" />
+                  <span>{featuredVideo.duration}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Calendar className="h-4 w-4" />
+                  <span>{featuredVideo.publishedAt}</span>
+                </div>
+              </div>
+
+              {/* Author Info */}
+              <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <User className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-1">{featuredVideo.author}</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        Technology researcher and futurist specializing in AI ethics and social impact.
+                      </p>
+                      <Button size="sm" variant="outline">
                         Follow
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </CardContent>
+              </Card>
 
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-3">
-                  <Button className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700">
-                    <Heart className="h-4 w-4 mr-2" />
-                    Like Video
-                  </Button>
-                  <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 bg-transparent">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download
-                  </Button>
-                  <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 bg-transparent">
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share
-                  </Button>
+              {/* Tags */}
+              <div className="space-y-3">
+                <h3 className="font-semibold text-gray-900 dark:text-white">Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {featuredVideo.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
                 </div>
               </div>
             </motion.div>
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-8">
-            {/* Video Details */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <Card className="bg-white/5 backdrop-blur-md border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Video Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-white/60">Duration:</span>
-                      <p className="text-white font-medium">{mainVideo.duration}</p>
-                    </div>
-                    <div>
-                      <span className="text-white/60">Views:</span>
-                      <p className="text-white font-medium">{mainVideo.views.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <span className="text-white/60">Likes:</span>
-                      <p className="text-white font-medium">{mainVideo.likes.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <span className="text-white/60">Category:</span>
-                      <p className="text-white font-medium">{mainVideo.category}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <span className="text-white/60 text-sm">Creator:</span>
-                    <p className="text-white font-medium">{mainVideo.creator}</p>
-                  </div>
-                  <div>
-                    <span className="text-white/60 text-sm">Upload Date:</span>
-                    <p className="text-white font-medium">
-                      {new Date(mainVideo.uploadDate).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Quick Actions */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <Card className="bg-white/5 backdrop-blur-md border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700">
-                    Add to Playlist
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full border-white/20 text-white hover:bg-white/10 bg-transparent"
-                  >
-                    Report Video
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full border-white/20 text-white hover:bg-white/10 bg-transparent"
-                  >
-                    Embed Video
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Related Videos Preview */}
+          <div className="space-y-6">
+            {/* Related Videos */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Card className="bg-white/5 backdrop-blur-md border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Up Next</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {relatedVideos.slice(0, 2).map((video) => (
-                    <div key={video.id} className="flex space-x-3 group cursor-pointer">
-                      <div className="relative w-24 h-16 bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
-                        <img
-                          src={video.poster || "/placeholder.svg"}
-                          alt={video.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                          <div className="w-6 h-6 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
-                            <div className="w-0 h-0 border-l-[6px] border-l-white border-y-[3px] border-y-transparent ml-0.5" />
+              <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50">
+                <CardContent className="p-6">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Related Videos</h3>
+                  <div className="space-y-4">
+                    {relatedVideos.map((video, index) => (
+                      <motion.div
+                        key={video.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.1 * index }}
+                        className="flex space-x-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer group"
+                      >
+                        <div className="relative w-24 h-16 bg-gray-200 dark:bg-gray-700 rounded overflow-hidden flex-shrink-0">
+                          <div className="absolute inset-0 flex items-center justify-center group-hover:bg-black/20 transition-colors">
+                            <Play className="h-4 w-4 text-gray-600 dark:text-gray-400 group-hover:text-white" />
+                          </div>
+                          <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-1 rounded">
+                            {video.duration}
                           </div>
                         </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-white font-medium text-sm line-clamp-2 group-hover:text-purple-300 transition-colors">
-                          {video.title}
-                        </h4>
-                        <div className="flex items-center space-x-2 text-xs text-white/60 mt-1">
-                          <span>{video.views.toLocaleString()} views</span>
-                          <span>•</span>
-                          <span>{video.duration}</span>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
+                            {video.title}
+                          </h4>
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{video.author}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-500">{formatNumber(video.views)} views</p>
                         </div>
-                      </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Video Stats Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50">
+                <CardContent className="p-6">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Video Statistics</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Total Views:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {formatNumber(featuredVideo.views)}
+                      </span>
                     </div>
-                  ))}
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Likes:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {formatNumber(featuredVideo.likes)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Duration:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{featuredVideo.duration}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Category:</span>
+                      <Badge variant="secondary" className="text-xs">
+                        {featuredVideo.category}
+                      </Badge>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
           </div>
         </div>
-
-        {/* Related Videos Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-16"
-        >
-          <VideoShowcase
-            title="Related Videos"
-            description="Discover more AI-generated content and digital art"
-            videos={relatedVideos}
-            layout="grid"
-            glassEffect="dark"
-          />
-        </motion.div>
       </div>
     </div>
   )

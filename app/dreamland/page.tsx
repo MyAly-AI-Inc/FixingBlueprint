@@ -1,36 +1,29 @@
 "use client"
 
-import { Suspense, useState } from "react"
-import dynamic from "next/dynamic"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Palette, Sparkles, Eye, Heart, Share2, Download, ArrowLeft, Loader2 } from "lucide-react"
+import { Palette, Sparkles, Eye, Heart, Share2, Download, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-// Dynamically import Spline to avoid SSR issues
-const Spline = dynamic(() => import("@splinetool/react-spline"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900/20 to-pink-900/20">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="relative">
-          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin"></div>
-          <div
-            className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-pink-500 rounded-full animate-spin"
-            style={{ animationDelay: "150ms" }}
-          ></div>
+// Simple fallback component instead of Spline
+function SplineFallback() {
+  return (
+    <div className="w-full h-full bg-gradient-to-br from-purple-900/20 via-pink-900/20 to-blue-900/20 flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="w-32 h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto animate-pulse">
+          <Sparkles className="h-16 w-16 text-white" />
         </div>
-        <p className="text-white font-medium text-lg">Loading Dreamland...</p>
-        <p className="text-white/60 text-sm">Preparing your AI art gallery experience</p>
+        <h3 className="text-2xl font-bold text-white">AI Art Gallery</h3>
+        <p className="text-white/70">Interactive 3D experience coming soon</p>
       </div>
     </div>
-  ),
-})
+  )
+}
 
 export default function DreamlandPage() {
-  const [isLoaded, setIsLoaded] = useState(false)
   const [currentArtwork, setCurrentArtwork] = useState(0)
 
   const artworks = [
@@ -62,14 +55,6 @@ export default function DreamlandPage() {
       category: "Classical",
     },
   ]
-
-  const handleSplineLoad = () => {
-    setIsLoaded(true)
-  }
-
-  const handleSplineError = () => {
-    setIsLoaded(true) // Still show the interface even if Spline fails
-  }
 
   return (
     <div className="relative w-full min-h-screen bg-black">
@@ -117,29 +102,9 @@ export default function DreamlandPage() {
       <div className="flex flex-col lg:flex-row min-h-screen pt-20">
         {/* 3D Scene */}
         <div className="flex-1 relative">
-          <Suspense
-            fallback={
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900/20 to-pink-900/20">
-                <div className="flex flex-col items-center space-y-4">
-                  <Loader2 className="h-12 w-12 animate-spin text-purple-400" />
-                  <p className="text-white font-medium text-xl">Entering Dreamland...</p>
-                </div>
-              </div>
-            }
-          >
-            <div className="w-full h-[60vh] lg:h-full">
-              <Spline
-                scene="https://prod.spline.design/uPiQvyvbg55IT4FQ/scene.splinecode"
-                onLoad={handleSplineLoad}
-                onError={handleSplineError}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  background: "transparent",
-                }}
-              />
-            </div>
-          </Suspense>
+          <div className="w-full h-[60vh] lg:h-full">
+            <SplineFallback />
+          </div>
 
           {/* Gradient Overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-purple-900/20 pointer-events-none" />
@@ -279,30 +244,6 @@ export default function DreamlandPage() {
           </Card>
         </div>
       </div>
-
-      {/* Welcome Message */}
-      {!isLoaded && (
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-40"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: isLoaded ? 0 : 1 }}
-          transition={{ duration: 1 }}
-        >
-          <div className="text-center">
-            <motion.div
-              className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-            >
-              <Sparkles className="h-10 w-10 text-white" />
-            </motion.div>
-            <h2 className="text-3xl font-bold text-white mb-4">Welcome to Dreamland</h2>
-            <p className="text-white/70 text-lg max-w-md mx-auto">
-              An immersive AI-driven 3D art gallery where imagination meets reality
-            </p>
-          </div>
-        </motion.div>
-      )}
     </div>
   )
 }

@@ -1,58 +1,52 @@
 "use client"
 
-import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Play, Pause, Volume2, VolumeX, Maximize, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, SkipBack, SkipForward, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface VideoPlayerProps {
   src: string
-  poster?: string
   title?: string
-  className?: string
-  glassEffect?: "light" | "dark" | "none"
-  aspectRatio?: "16:9" | "4:3" | "1:1" | "21:9"
+  description?: string
+  aspectRatio?: "16:9" | "4:3" | "1:1" | "9:16"
   autoPlay?: boolean
   muted?: boolean
+  loop?: boolean
   controls?: boolean
-  preload?: "none" | "metadata" | "auto"
+  glassEffect?: boolean
+  className?: string
 }
 
 export function VideoPlayer({
   src,
-  poster,
   title,
-  className = "",
-  glassEffect = "light",
+  description,
   aspectRatio = "16:9",
   autoPlay = false,
-  muted = true,
+  muted = false,
+  loop = false,
   controls = true,
-  preload = "metadata",
+  glassEffect = true,
+  className,
 }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(muted)
+  const [volume, setVolume] = useState(1)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [volume, setVolume] = useState(1)
-  const [showControls, setShowControls] = useState(true)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [hasError, setHasError] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [showControls, setShowControls] = useState(true)
 
   const aspectRatioClasses = {
     "16:9": "aspect-video",
     "4:3": "aspect-[4/3]",
     "1:1": "aspect-square",
-    "21:9": "aspect-[21/9]",
-  }
-
-  const glassClasses = {
-    light: "bg-white/10 backdrop-blur-md border border-white/20",
-    dark: "bg-black/20 backdrop-blur-md border border-white/10",
-    none: "bg-transparent",
+    "9:16": "aspect-[9/16]",
   }
 
   useEffect(() => {
@@ -71,8 +65,12 @@ export function VideoPlayer({
     const handlePlay = () => setIsPlaying(true)
     const handlePause = () => setIsPlaying(false)
     const handleError = () => {
-      setHasError(true)
+      setError("Failed to load video")
       setIsLoading(false)
+    }
+
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
     }
 
     video.addEventListener("loadeddata", handleLoadedData)
@@ -80,6 +78,7 @@ export function VideoPlayer({
     video.addEventListener("play", handlePlay)
     video.addEventListener("pause", handlePause)
     video.addEventListener("error", handleError)
+    document.addEventListener("fullscreenchange", handleFullscreenChange)
 
     return () => {
       video.removeEventListener("loadeddata", handleLoadedData)
@@ -87,20 +86,22 @@ export function VideoPlayer({
       video.removeEventListener("play", handlePlay)
       video.removeEventListener("pause", handlePause)
       video.removeEventListener("error", handleError)
+      document.removeEventListener("fullscreenchange", handleFullscreenChange)
     }
   }, [])
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     const video = videoRef.current
     if (!video) return
 
-    if (isPlaying) {
-      video.pause()
-    } else {
-      video.play().catch(() => {
-        // Handle play promise rejection
-        setHasError(true)
-      })
+    try {
+      if (isPlaying) {
+        video.pause()
+      } else {
+        await video.play()
+      }
+    } catch (err) {
+      console.error("Error playing video:", err)
     }
   }
 
@@ -108,8 +109,8 @@ export function VideoPlayer({
     const video = videoRef.current
     if (!video) return
 
-    video.muted = !video.muted
-    setIsMuted(video.muted)
+    video.muted = !isMuted
+    setIsMuted(!isMuted)
   }
 
   const handleVolumeChange = (newVolume: number) => {
@@ -118,200 +119,190 @@ export function VideoPlayer({
 
     video.volume = newVolume
     setVolume(newVolume)
-    if (newVolume === 0) {
-      setIsMuted(true)
-      video.muted = true
-    } else if (isMuted) {
-      setIsMuted(false)
-      video.muted = false
-    }
+    setIsMuted(newVolume === 0)
   }
 
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    const video = videoRef.current
-    if (!video || !duration) return
-
-    const rect = e.currentTarget.getBoundingClientRect()
-    const clickX = e.clientX - rect.left
-    const newTime = (clickX / rect.width) * duration
-    video.currentTime = newTime
-  }
-
-  const toggleFullscreen = () => {
+  const handleSeek = (newTime: number) => {
     const video = videoRef.current
     if (!video) return
 
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {
-        // Handle fullscreen exit error
-      })
-    } else {
-      video.requestFullscreen().catch(() => {
-        // Handle fullscreen request error
-      })
+    video.currentTime = newTime
+    setCurrentTime(newTime)
+  }
+
+  const toggleFullscreen = async () => {
+    const video = videoRef.current
+    if (!video) return
+
+    try {
+      if (!isFullscreen) {
+        await video.requestFullscreen()
+      } else {
+        await document.exitFullscreen()
+      }
+    } catch (err) {
+      console.error("Error toggling fullscreen:", err)
     }
   }
 
-  const formatTime = (time: number) => {
-    if (!time || !isFinite(time)) return "0:00"
+  const skip = (seconds: number) => {
+    const video = videoRef.current
+    if (!video) return
+
+    const newTime = Math.max(0, Math.min(duration, currentTime + seconds))
+    handleSeek(newTime)
+  }
+
+  const formatTime = (time: number): string => {
+    if (!isFinite(time) || isNaN(time)) return "0:00"
+
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
     return `${minutes}:${seconds.toString().padStart(2, "0")}`
   }
 
-  if (hasError) {
+  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0
+
+  if (error) {
     return (
-      <div className={cn("relative", aspectRatioClasses[aspectRatio], className)}>
-        <div className={cn("absolute inset-0 rounded-lg flex items-center justify-center", glassClasses[glassEffect])}>
-          <div className="text-center text-white">
-            <RotateCcw className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="text-lg font-medium mb-2">Video unavailable</p>
-            <p className="text-sm opacity-70">Please try again later</p>
+      <Card className={cn("relative overflow-hidden", aspectRatioClasses[aspectRatio], className)}>
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 text-white">
+          <div className="text-center">
+            <p className="text-lg font-medium mb-2">Failed to load video</p>
+            <p className="text-sm text-gray-400">{error}</p>
           </div>
         </div>
-      </div>
+      </Card>
     )
   }
 
   return (
-    <div
-      className={cn("relative group", aspectRatioClasses[aspectRatio], className)}
-      onMouseEnter={() => setShowControls(true)}
-      onMouseLeave={() => setShowControls(false)}
-    >
+    <Card className={cn("relative overflow-hidden group", aspectRatioClasses[aspectRatio], className)}>
       <video
         ref={videoRef}
         src={src}
-        poster={poster}
         autoPlay={autoPlay}
         muted={muted}
-        playsInline
-        preload={preload}
-        className="w-full h-full object-cover rounded-lg"
-        onClick={togglePlay}
+        loop={loop}
+        className="w-full h-full object-cover"
+        onMouseEnter={() => setShowControls(true)}
+        onMouseLeave={() => setShowControls(true)}
       />
 
-      {/* Loading State */}
+      {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin text-white" />
             <p className="text-white text-sm">Loading video...</p>
           </div>
         </div>
       )}
 
-      {/* Controls */}
-      {controls && !isLoading && (
-        <motion.div
+      {/* Controls Overlay */}
+      {controls && showControls && !isLoading && (
+        <div
           className={cn(
-            "absolute inset-0 rounded-lg transition-opacity duration-300",
-            glassClasses[glassEffect],
-            showControls ? "opacity-100" : "opacity-0",
+            "absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent",
+            "opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+            glassEffect && "backdrop-blur-sm",
           )}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: showControls ? 1 : 0 }}
         >
-          {/* Play/Pause Button */}
+          {/* Center Play Button */}
           <div className="absolute inset-0 flex items-center justify-center">
             <Button
               onClick={togglePlay}
-              variant="ghost"
               size="lg"
-              className="w-16 h-16 rounded-full bg-black/30 hover:bg-black/50 text-white border-2 border-white/20 hover:border-white/40 min-w-[64px] min-h-[64px]"
+              className={cn(
+                "w-16 h-16 rounded-full",
+                glassEffect
+                  ? "bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30"
+                  : "bg-black/50 hover:bg-black/70",
+                "text-white transition-all duration-200",
+              )}
             >
-              {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8 ml-1" />}
+              {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-1" />}
             </Button>
           </div>
 
           {/* Bottom Controls */}
           <div className="absolute bottom-0 left-0 right-0 p-4">
             {/* Progress Bar */}
-            <div className="w-full h-2 bg-white/20 rounded-full cursor-pointer mb-4" onClick={handleSeek}>
+            <div className="mb-4">
               <div
-                className="h-full bg-white rounded-full transition-all duration-150"
-                style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-              />
+                className="w-full h-1 bg-white/30 rounded-full cursor-pointer"
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  const percentage = (e.clientX - rect.left) / rect.width
+                  handleSeek(percentage * duration)
+                }}
+              >
+                <div
+                  className="h-full bg-white rounded-full transition-all duration-150"
+                  style={{ width: `${progressPercentage}%` }}
+                />
+              </div>
             </div>
 
             {/* Control Buttons */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <Button
-                  onClick={togglePlay}
-                  variant="ghost"
-                  size="sm"
-                  className="text-white hover:bg-white/10 min-w-[44px] min-h-[44px]"
-                >
+                <Button onClick={togglePlay} size="sm" variant="ghost" className="text-white hover:bg-white/20">
                   {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                 </Button>
 
-                <Button
-                  onClick={toggleMute}
-                  variant="ghost"
-                  size="sm"
-                  className="text-white hover:bg-white/10 min-w-[44px] min-h-[44px]"
-                >
+                <Button onClick={() => skip(-10)} size="sm" variant="ghost" className="text-white hover:bg-white/20">
+                  <SkipBack className="h-4 w-4" />
+                </Button>
+
+                <Button onClick={() => skip(10)} size="sm" variant="ghost" className="text-white hover:bg-white/20">
+                  <SkipForward className="h-4 w-4" />
+                </Button>
+
+                <Button onClick={toggleMute} size="sm" variant="ghost" className="text-white hover:bg-white/20">
                   {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                 </Button>
 
-                <div className="flex items-center space-x-2">
+                {/* Volume Slider */}
+                <div className="hidden md:flex items-center space-x-2">
                   <input
                     type="range"
                     min="0"
                     max="1"
                     step="0.1"
-                    value={isMuted ? 0 : volume}
+                    value={volume}
                     onChange={(e) => handleVolumeChange(Number.parseFloat(e.target.value))}
-                    className="w-20 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
+                    className="w-20 h-1 bg-white/30 rounded-full appearance-none cursor-pointer"
                   />
                 </div>
 
-                <span className="text-white text-sm font-mono">
+                <span className="text-white text-sm">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </span>
               </div>
 
-              <Button
-                onClick={toggleFullscreen}
-                variant="ghost"
-                size="sm"
-                className="text-white hover:bg-white/10 min-w-[44px] min-h-[44px]"
-              >
-                <Maximize className="h-4 w-4" />
+              <Button onClick={toggleFullscreen} size="sm" variant="ghost" className="text-white hover:bg-white/20">
+                {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
               </Button>
             </div>
           </div>
 
-          {/* Title */}
-          {title && (
-            <div className="absolute top-4 left-4">
-              <h3 className="text-white font-medium text-lg">{title}</h3>
+          {/* Video Info */}
+          {(title || description) && (
+            <div className="absolute top-4 left-4 right-4">
+              <div
+                className={cn(
+                  "p-4 rounded-lg",
+                  glassEffect ? "bg-white/10 backdrop-blur-md border border-white/20" : "bg-black/50",
+                )}
+              >
+                {title && <h3 className="text-white font-semibold text-lg mb-1">{title}</h3>}
+                {description && <p className="text-white/80 text-sm">{description}</p>}
+              </div>
             </div>
           )}
-        </motion.div>
+        </div>
       )}
-
-      <style jsx>{`
-        .slider::-webkit-slider-thumb {
-          appearance: none;
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          background: white;
-          cursor: pointer;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .slider::-moz-range-thumb {
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          background: white;
-          cursor: pointer;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-      `}</style>
-    </div>
+    </Card>
   )
 }
