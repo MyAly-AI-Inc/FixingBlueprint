@@ -41,6 +41,12 @@ export default function DreamlandPage() {
   const [isPlaying, setIsPlaying] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [mounted, setMounted] = useState(false)
+
+  // Fix SSR issue by only mounting on client
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const artworks: Artwork[] = [
     {
@@ -142,6 +148,15 @@ export default function DreamlandPage() {
     }
   }, [filteredArtworks, selectedArtwork])
 
+  // Don't render until mounted to avoid SSR issues
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Navigation */}
@@ -184,24 +199,25 @@ export default function DreamlandPage() {
                     style={{ animationDuration: "20s" }}
                   />
 
-                  {/* Floating Particles */}
+                  {/* Floating Particles - Fixed for SSR */}
                   <div className="absolute inset-0 overflow-hidden">
                     {[...Array(20)].map((_, i) => (
                       <motion.div
                         key={i}
                         className="absolute w-2 h-2 bg-white/20 rounded-full"
-                        initial={{
-                          x: Math.random() * window.innerWidth,
-                          y: Math.random() * window.innerHeight,
+                        style={{
+                          left: `${(i * 47) % 100}%`,
+                          top: `${(i * 23) % 100}%`,
                         }}
                         animate={{
-                          x: Math.random() * window.innerWidth,
-                          y: Math.random() * window.innerHeight,
+                          x: [0, 50, 0],
+                          y: [0, -30, 0],
+                          opacity: [0.2, 0.8, 0.2],
                         }}
                         transition={{
-                          duration: Math.random() * 10 + 10,
+                          duration: 8 + (i % 4),
                           repeat: Number.POSITIVE_INFINITY,
-                          repeatType: "reverse",
+                          delay: i * 0.2,
                         }}
                       />
                     ))}
