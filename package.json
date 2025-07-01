@@ -1,37 +1,95 @@
 {
-  "name": "3d-blueprint",
-  "version": "1.0.0",
+  "name": "3d-blueprint-platform",
+  "version": "2.0.0",
   "private": true,
-  "description": "Learn 3D printing from beginner to advanced with free educational resources",
+  "description": "AI-powered 3D printing education platform - Watch Aly Yu build a $20K/month business in 30 days",
   "keywords": [
     "3d-printing",
+    "ai-tools",
     "education",
-    "learning-platform",
+    "business-course",
     "maker",
-    "diy",
-    "tutorial"
+    "entrepreneurship",
+    "design-automation",
+    "manufacturing",
+    "startup",
+    "online-course"
   ],
+  "homepage": "https://3dblueprint.com",
   "repository": {
     "type": "git",
     "url": "private"
   },
   "license": "UNLICENSED",
-  "author": "Aly Yu",
+  "author": {
+    "name": "Aly Yu",
+    "email": "aly@3dblueprint.com",
+    "url": "https://3dblueprint.com"
+  },
   "scripts": {
+    "analyze": "cross-env ANALYZE=true next build",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "clean": "rm -rf .next out node_modules",
     "dev": "next dev",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "start": "next start",
+    "test": "echo \"No tests specified\" && exit 0",
     "type-check": "tsc --noEmit"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
+    "@radix-ui/react-accordion": "^1.1.2",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-avatar": "^1.0.4",
+    "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-hover-card": "^1.0.7",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-menubar": "^1.0.4",
+    "@radix-ui/react-navigation-menu": "^1.1.4",
+    "@radix-ui/react-popover": "^1.0.7",
+    "@radix-ui/react-progress": "^1.0.3",
+    "@radix-ui/react-radio-group": "^1.1.3",
+    "@radix-ui/react-scroll-area": "^1.0.5",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-separator": "^1.0.3",
+    "@radix-ui/react-slider": "^1.1.2",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@radix-ui/react-toggle": "^1.0.3",
+    "@radix-ui/react-toggle-group": "^1.0.4",
+    "@radix-ui/react-tooltip": "^1.0.7",
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
     "@splinetool/react-spline": "latest",
     "@splinetool/runtime": "^0.9.506",
+    "@tsparticles/engine": "latest",
+    "@tsparticles/react": "latest",
+    "@tsparticles/slim": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "expo": "latest",
@@ -44,23 +102,32 @@
     "next-themes": "latest",
     "react": "^19",
     "react-dom": "^19",
+    "react-intersection-observer": "^9.8.1",
     "react-native": "latest",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "three": "latest"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.2.4",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9.30.0",
     "eslint-config-next": "15.3.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "next-sitemap": "^4.2.3",
     "postcss": "^8.5",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }

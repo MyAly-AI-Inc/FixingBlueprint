@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Menu, X, Home, BookOpen, Users, Play, ArrowRight, Sparkles } from "lucide-react"
+import { Menu, X, Home, BookOpen, Users, Play, ArrowRight, Sparkles, Lightbulb } from "lucide-react"
 
 interface NavLink {
   href: string
@@ -18,6 +18,7 @@ interface NavLink {
   description?: string
 }
 
+// Add the Philosophy link to the navLinks array
 const navLinks: NavLink[] = [
   {
     href: "/",
@@ -43,6 +44,12 @@ const navLinks: NavLink[] = [
     label: "Community",
     icon: <Users className="w-4 h-4" />,
     description: "Connect with makers",
+  },
+  {
+    href: "/philosophy",
+    label: "Philosophy",
+    icon: <Lightbulb className="w-4 h-4" />,
+    description: "Explore the philosophy of creation",
   },
 ]
 
@@ -88,8 +95,8 @@ export function Navbar() {
     <>
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
-          scrolled 
-            ? "bg-gray-900/95 backdrop-blur-xl border-b border-gray-800/50 shadow-lg" 
+          scrolled
+            ? "bg-gray-900/95 backdrop-blur-xl border-b border-gray-800/50 shadow-lg"
             : "bg-gray-900/20 backdrop-blur-md border-b border-gray-800/30"
         }`}
         initial={{ y: -100 }}

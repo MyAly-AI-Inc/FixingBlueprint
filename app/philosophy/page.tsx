@@ -1,659 +1,294 @@
 "use client"
 
-import type React from "react"
-
-import { useState, Suspense, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {
-  ArrowRight,
-  Mail,
-  Sparkles,
-  Palette,
-  Lightbulb,
-  Users,
-  TrendingUp,
-  CheckCircle,
-  Star,
-  CuboidIcon as Cube,
-  Database,
-  Crown,
-  Award,
-  Printer,
-  Brain,
-  Rocket,
-  BookOpen,
-} from "lucide-react"
-
-// Spline Viewer Component
-const SplineViewer = ({ url }: { url: string }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  
-  useEffect(() => {
-    // Load Spline viewer script
-    const script = document.createElement('script')
-    script.type = 'module'
-    script.src = 'https://unpkg.com/@splinetool/viewer@1.10.16/build/spline-viewer.js'
-    
-    script.onload = () => {
-      // Create spline-viewer element after script loads
-      if (containerRef.current) {
-        const viewer = document.createElement('spline-viewer')
-        viewer.setAttribute('url', url)
-        viewer.style.width = '100%'
-        viewer.style.height = '100%'
-        containerRef.current.appendChild(viewer)
-      }
-    }
-    
-    document.head.appendChild(script)
-    
-    return () => {
-      // Cleanup
-      if (script.parentNode) {
-        script.parentNode.removeChild(script)
-      }
-      if (containerRef.current) {
-        containerRef.current.innerHTML = ''
-      }
-    }
-  }, [url])
-  
-  return <div ref={containerRef} className="w-full h-full" />
-}
+import { Button } from "@/components/ui/button"
+import { GlowCard } from "@/components/ui/spotlight-card"
+import { ArrowRight, Lightbulb, Target, Zap, Users, Brain, Rocket } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
 
 export default function PhilosophyPage() {
-  const [email, setEmail] = useState("")
-  const [isSubscribed, setIsSubscribed] = useState(false)
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (email) {
-      setIsSubscribed(true)
-      setEmail("")
-    }
-  }
-
-  const features = [
+  const principles = [
     {
-      icon: <Brain className="h-6 w-6" />,
-      title: "Philosophy of Making",
-      description: "Deep dives into the art and philosophy of creation, manufacturing, and bringing ideas to life",
+      icon: <Lightbulb className="h-8 w-8" />,
+      title: "Innovation Through Iteration",
+      description:
+        "Every great design starts with a simple idea, then evolves through countless iterations until it reaches perfection.",
+      color: "from-yellow-500 to-orange-500",
+      glowColor: "orange" as const,
     },
     {
-      icon: <Lightbulb className="h-6 w-6" />,
-      title: "Creative Innovation",
-      description: "Explore the intersection of philosophy, design thinking, and 3D printing innovation",
+      icon: <Target className="h-8 w-8" />,
+      title: "Purpose-Driven Design",
+      description: "Every creation must solve a real problem. Beauty without function is just decoration.",
+      color: "from-blue-500 to-cyan-500",
+      glowColor: "blue" as const,
     },
     {
-      icon: <Rocket className="h-6 w-6" />,
-      title: "Business Philosophy",
-      description: "Learn the mindset and principles behind building a sustainable creative business",
+      icon: <Zap className="h-8 w-8" />,
+      title: "Technology as Enabler",
+      description:
+        "AI and automation don't replace creativity—they amplify it, allowing us to focus on what truly matters.",
+      color: "from-purple-500 to-pink-500",
+      glowColor: "purple" as const,
     },
     {
-      icon: <Users className="h-6 w-6" />,
-      title: "Maker Community",
-      description: "Connect with philosophical makers who think deeply about their craft",
+      icon: <Users className="h-8 w-8" />,
+      title: "Community-Centered Growth",
+      description:
+        "The best innovations come from understanding real needs and building solutions together with the community.",
+      color: "from-green-500 to-emerald-500",
+      glowColor: "green" as const,
     },
-  ]
-
-  const testimonials = [
-    {
-      name: "David Kim",
-      role: "3D Printing Entrepreneur",
-      content:
-        "Aly's philosophical approach to 3D printing transformed my business. It's not just about printing objects, it's about creating value.",
-      rating: 5,
-    },
-    {
-      name: "Maria Santos",
-      role: "Product Designer",
-      content: "The philosophy newsletter helped me understand the 'why' behind design. My products now tell stories.",
-      rating: 5,
-    },
-    {
-      name: "Alex Chen",
-      role: "Maker & Artist",
-      content: "This isn't just another business newsletter. It's a journey into the soul of creation. Absolutely love it!",
-      rating: 5,
-    },
-  ]
-
-  const philosophyBenefits = [
-    "Weekly philosophical insights on making and creation",
-    "Exclusive essays on the Axiogenetic Theorem",
-    "Monthly virtual philosophy circles",
-    "Early access to new philosophical frameworks",
-    "Direct Q&A with Aly on philosophy and business",
-    "Access to private philosophy community",
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900">
-      {/* Hero Section with Spline Background */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900">
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Spline 3D Background - You can replace with your own 3D scene */}
-        <div className="absolute inset-0 z-0">
-          <Suspense
-            fallback={
-              <div className="w-full h-full bg-gradient-to-br from-blue-900/20 via-indigo-900 to-purple-900 flex items-center justify-center">
-                <div className="text-white/50">Loading 3D Experience...</div>
-              </div>
-            }
-          >
-            <SplineViewer url="https://prod.spline.design/uPiQvyvbg55IT4FQ/scene.splinecode" />
-          </Suspense>
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: "50px 50px",
+            }}
+          />
         </div>
 
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/50 z-10" />
+        {/* Floating Elements */}
+        <div className="absolute inset-0">
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 rounded-full bg-blue-400/30"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.2, 0.6, 0.2],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 4,
+                repeat: Number.POSITIVE_INFINITY,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          className="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto"
-        >
-          <motion.h1
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold mb-8"
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-5xl mx-auto"
           >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Philosophy</span>
-            <br />
-            <span className="text-white font-sans tracking-tight drop-shadow-2xl">OF CREATION</span>
-          </motion.h1>
+            <Badge className="mb-6 bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-300 border-purple-500/30 backdrop-blur-sm py-2 px-4">
+              <Brain className="mr-2 h-4 w-4" />
+              Design Philosophy
+            </Badge>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-xl sm:text-2xl text-blue-200 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-lg"
-          >
-            Explore the deeper meaning behind making. Join Aly Yu as she shares philosophical insights from building a 
-            3D printing empire and her groundbreaking Axiogenetic Theorem.
-          </motion.p>
+            <h1 className="text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
+                Building the Future
+              </span>
+              <br />
+              <span className="text-white">One Print at a Time</span>
+            </h1>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
-          >
-            <a href="#philosophy-membership">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 shadow-lg">
-                <Sparkles className="mr-2 h-5 w-5" />
-                Join the Philosophy Circle - $39/year
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </a>
-          </motion.div>
+            <p className="text-xl lg:text-2xl text-purple-200 mb-12 max-w-4xl mx-auto leading-relaxed">
+              My approach to 3D printing combines cutting-edge technology with human-centered design principles,
+              creating solutions that don't just work—they inspire.
+            </p>
 
-          {isSubscribed && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="mb-8 flex items-center justify-center gap-2 text-green-400"
-            >
-              <CheckCircle className="h-5 w-5" />
-              <span>Welcome to the philosophical journey! Check your email for confirmation.</span>
-            </motion.div>
-          )}
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            className="flex items-center justify-center gap-8 text-sm text-white/80"
-          >
-            <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4" />
-              <span>Weekly Essays</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              <span>2,000+ Thinkers</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-yellow-400" />
-              <span>5/5 Rating</span>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Link href="/robot-demo">
+                <Button
+                  size="xl"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <Rocket className="mr-2 h-5 w-5" />
+                  See Technology in Action
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/aly/challenge">
+                <Button
+                  size="xl"
+                  variant="outline"
+                  className="bg-black/30 backdrop-blur-md border-white/30 text-white hover:bg-white/10"
+                >
+                  Join the Challenge
+                </Button>
+              </Link>
             </div>
           </motion.div>
-
-          {/* CTA to Other Pages */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            className="mt-12 flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Link href="/blueprint">
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-black/30 backdrop-blur-md border-white/30 text-white hover:bg-black/50 flex items-center gap-2"
-              >
-                <BookOpen className="h-5 w-5" />
-                Explore 3D Blueprint
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/mini-blueprint">
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-black/30 backdrop-blur-md border-white/30 text-white hover:bg-black/50 flex items-center gap-2"
-              >
-                <Printer className="h-5 w-5" />
-                Get Free Business Guide
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center"
-          >
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1 h-3 bg-white/70 rounded-full mt-2"
-            />
-          </motion.div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* Philosophy Membership Section */}
-      <section
-        id="philosophy-membership"
-        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-900/20 to-purple-900/20"
-      >
-        <div className="max-w-6xl mx-auto">
+      {/* Core Principles Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <Badge className="mb-4 bg-purple-600/20 text-purple-300 border-purple-600/30">
-              <Brain className="h-3 w-3 mr-1" />
-              Philosophy Circle
+            <Badge className="mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 border-blue-500/30 backdrop-blur-sm py-2 px-4">
+              <Target className="h-4 w-4 mr-2" />
+              Core Principles
             </Badge>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white">
-              Join the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Philosophy Circle</span>
+            <h2 className="text-5xl lg:text-6xl font-bold mb-8 text-white">
+              Design{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-600">
+                Philosophy
+              </span>
             </h2>
-            <p className="text-xl text-blue-200 max-w-3xl mx-auto">
-              Go beyond the surface. Explore the philosophical foundations of creation, business, and the maker movement with Aly Yu.
+            <p className="text-xl text-purple-200 max-w-4xl mx-auto leading-relaxed">
+              These four principles guide every decision, every design, and every innovation in my 3D printing journey.
             </p>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Benefits */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-2xl font-bold text-white mb-6">What You'll Discover</h3>
-              <div className="space-y-4">
-                {philosophyBenefits.map((benefit, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="flex items-center gap-3"
-                  >
-                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                    <span className="text-gray-300">{benefit}</span>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="mt-8 p-4 bg-white/5 rounded-lg border border-white/10">
-                <div className="flex items-center gap-2 mb-2">
-                  <Award className="h-5 w-5 text-yellow-400" />
-                  <span className="font-semibold text-white">Philosophy & Art History Degree</span>
-                </div>
-                <p className="text-sm text-gray-300">
-                  Learn from Aly's unique perspective combining philosophy, art history, and entrepreneurship. 
-                  Discover how ancient wisdom applies to modern making.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Right side - Pricing Card */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <Card className="bg-gray-800/50 border-blue-500/50 backdrop-blur-sm relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <Badge className="mb-4 bg-purple-600 text-white">
-                      <Sparkles className="h-3 w-3 mr-1" />
-                      Philosophy Circle
-                    </Badge>
-                    <div className="text-4xl font-bold text-white mb-2">
-                      $39<span className="text-lg font-normal text-gray-400">/year</span>
-                    </div>
-                    <p className="text-blue-300 font-semibold">Weekly philosophical insights</p>
-                  </div>
-
-                  <form onSubmit={handleSubscribe} className="space-y-4">
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <Input
-                        type="email"
-                        placeholder="Enter your email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-300"
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {principles.map((principle, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <GlowCard glowColor={principle.glowColor} customSize className="h-full">
+                  <div className="p-8 h-full flex flex-col">
+                    <div
+                      className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${principle.color} flex items-center justify-center text-white shadow-lg mb-6`}
                     >
-                      <Brain className="mr-2 h-5 w-5" />
-                      Join the Philosophy Circle
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </form>
-
-                  <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-400">Cancel anytime • No hidden fees</p>
-                    <div className="flex items-center justify-center gap-4 mt-4 text-xs text-gray-500">
-                      <span>✓ Instant access</span>
-                      <span>✓ Weekly essays</span>
-                      <span>✓ Community</span>
+                      {principle.icon}
                     </div>
+                    <h3 className="text-2xl font-bold text-white mb-4">{principle.title}</h3>
+                    <p className="text-gray-300 leading-relaxed flex-1">{principle.description}</p>
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+                </GlowCard>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-blue-900/20 relative">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Badge className="mb-4 bg-purple-600/20 text-purple-300 border-purple-600/30">About the Philosophy</Badge>
-              <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white">
-                The Axiogenetic <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Theorem</span>
+              <Badge className="mb-6 bg-gradient-to-r from-green-600/20 to-emerald-600/20 text-green-300 border-green-500/30 backdrop-blur-sm py-2 px-4">
+                <Users className="h-4 w-4 mr-2" />
+                About the Vision
+              </Badge>
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6 text-white">
+                Where{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                  Innovation
+                </span>{" "}
+                Meets Purpose
               </h2>
-              <p className="text-lg text-blue-200 mb-6 leading-relaxed">
-                After months of building a 3D printing business and studying the patterns of value creation, I developed 
-                the Axiogenetic Theorem - a philosophical framework for understanding how value emerges from creation.
-              </p>
-              <p className="text-lg text-blue-200 mb-8 leading-relaxed">
-                This newsletter explores not just the 'how' of making, but the deeper 'why'. From Plato's theory of forms 
-                to modern manufacturing, from digital creation to physical manifestation - we examine the philosophy that 
-                transforms ideas into reality.
-              </p>
-              <Link href="/mini-blueprint">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                >
-                  Learn My Story <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+                <p>
+                  I believe that the future of manufacturing lies not just in automation, but in the perfect harmony
+                  between human creativity and artificial intelligence. Every project I undertake is an exploration of
+                  this symbiotic relationship.
+                </p>
+                <p>
+                  Through the 30-day challenge, I'm documenting this journey—showing how AI can amplify human potential
+                  rather than replace it. Each print, each design, each innovation is a step toward a more accessible,
+                  sustainable, and creative future.
+                </p>
+                <p>
+                  The goal isn't just to create better products, but to inspire a new generation of makers who see
+                  technology as a tool for positive change in the world.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                <Link href="/aly/challenge">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                  >
+                    <Rocket className="mr-2 h-5 w-5" />
+                    Follow the Journey
+                  </Button>
+                </Link>
+                <Link href="/robot-demo">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-black/30 backdrop-blur-md border-white/30 text-white hover:bg-white/10"
+                  >
+                    Experience the Tech
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              <div className="relative">
                 <Image
-                  src="/images/mini-blueprint/woman-with-glowing-print.jpeg"
-                  alt="Aly Yu - Philosophy of Creation"
+                  src="/robot-hand-hero.jpeg"
+                  alt="Futuristic robot hand representing AI and 3D printing innovation"
                   width={600}
                   height={400}
-                  className="w-full h-auto object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = "/placeholder.svg?height=400&width=600&text=Philosophy+of+Creation"
-                  }}
+                  className="rounded-2xl shadow-2xl object-cover"
+                  priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl" />
+
+                {/* Floating elements around the image */}
+                {[...Array(4)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-3 h-3 bg-green-400/60 rounded-full"
+                    style={{
+                      left: `${10 + Math.random() * 80}%`,
+                      top: `${10 + Math.random() * 80}%`,
+                    }}
+                    animate={{
+                      y: [0, -15, 0],
+                      opacity: [0.4, 1, 0.4],
+                    }}
+                    transition={{
+                      duration: 3 + Math.random() * 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      delay: Math.random() * 2,
+                    }}
+                  />
+                ))}
               </div>
             </motion.div>
           </div>
         </div>
       </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-800/30">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-4 bg-purple-600/20 text-purple-300 border-purple-600/30">What You'll Get</Badge>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white">
-              More Than Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Business Advice</span>
-            </h2>
-            <p className="text-xl text-blue-200 max-w-3xl mx-auto">
-              Each essay is a journey into the philosophical foundations of creation, entrepreneurship, and the maker movement.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="h-full bg-gray-800/50 border-gray-700 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4 text-blue-400">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
-                    <p className="text-gray-300 leading-relaxed">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Spline 3D Showcase Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900/50 to-black/50">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-4 bg-blue-600/20 text-blue-300 border-blue-600/30">
-              <Cube className="h-3 w-3 mr-1" />
-              Interactive Experience
-            </Badge>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white">
-              Explore the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">3D Philosophy</span>
-            </h2>
-            <p className="text-xl text-blue-200 max-w-3xl mx-auto">
-              Interact with a 3D representation of the creative process. Spin, zoom, and explore the dimensions of making.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="relative rounded-2xl overflow-hidden shadow-2xl bg-gray-900/50 border border-gray-800"
-          >
-            <div className="aspect-video relative">
-              <Suspense
-                fallback={
-                  <div className="w-full h-full bg-gradient-to-br from-blue-900/40 via-indigo-900/40 to-purple-900/40 flex items-center justify-center">
-                    <div className="text-center">
-                      <Cube className="h-16 w-16 text-blue-400 animate-pulse mx-auto mb-4" />
-                      <p className="text-white/70 text-lg">Loading 3D Experience...</p>
-                    </div>
-                  </div>
-                }
-              >
-                <SplineViewer url="https://prod.spline.design/uPiQvyvbg55IT4FQ/scene.splinecode" />
-              </Suspense>
-            </div>
-            
-            {/* Interaction hints */}
-            <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center pointer-events-none">
-              <div className="bg-black/70 backdrop-blur-md rounded-lg px-4 py-2 text-sm text-white/80">
-                <span className="inline-flex items-center gap-2">
-                  <span className="text-blue-400">↻</span> Drag to rotate
-                </span>
-              </div>
-              <div className="bg-black/70 backdrop-blur-md rounded-lg px-4 py-2 text-sm text-white/80">
-                <span className="inline-flex items-center gap-2">
-                  <span className="text-blue-400">⇅</span> Scroll to zoom
-                </span>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="mt-8 text-center"
-          >
-            <p className="text-gray-400 mb-4">
-              This interactive 3D model represents the journey from idea to creation - a core concept in our philosophy.
-            </p>
-            <Link href="/generator">
-              <Button variant="outline" className="bg-white/5 border-white/20 text-white hover:bg-white/10">
-                <Cube className="mr-2 h-4 w-4" />
-                Try Our 3D Generator
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-4 bg-purple-600/20 text-purple-300 border-purple-600/30">Community Voices</Badge>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white">
-              What <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Philosophers</span> Say
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="h-full bg-gray-800/50 border-gray-700 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-gray-300 mb-6 leading-relaxed">"{testimonial.content}"</p>
-                    <div>
-                      <p className="font-semibold text-white">{testimonial.name}</p>
-                      <p className="text-sm text-gray-400">{testimonial.role}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-900/50 border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <Sparkles className="h-6 w-6 text-purple-400" />
-              <span className="text-lg font-semibold text-white">Philosophy of Creation</span>
-            </div>
-            <div className="flex space-x-6 text-sm text-gray-400">
-              <Link href="/blueprint" className="hover:text-white transition-colors">
-                3D Blueprint
-              </Link>
-              <Link href="/mini-blueprint" className="hover:text-white transition-colors">
-                Business Guide
-              </Link>
-              <Link href="/community" className="hover:text-white transition-colors">
-                Community
-              </Link>
-              <a href="#" className="hover:text-white transition-colors">
-                Contact
-              </a>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
-            <p>&copy; 2025 Philosophy of Creation by Aly Yu. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

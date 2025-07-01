@@ -2,6 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-display-1 {
+    @apply text-6xl md:text-7xl font-bold leading-tight tracking-tight;
+  }
+
+  .text-display-2 {
+    @apply text-5xl md:text-6xl font-bold leading-tight tracking-tight;
+  }
+
+  .text-heading-1 {
+    @apply text-4xl md:text-5xl font-bold leading-tight;
+  }
+
+  .text-heading-2 {
+    @apply text-3xl md:text-4xl font-bold leading-tight;
+  }
+
+  .text-heading-3 {
+    @apply text-2xl md:text-3xl font-semibold leading-tight;
+  }
+
+  .text-heading-4 {
+    @apply text-xl md:text-2xl font-semibold leading-snug;
+  }
+
+  .text-body-large {
+    @apply text-lg md:text-xl leading-relaxed;
+  }
+
+  .text-body {
+    @apply text-base md:text-lg leading-relaxed;
+  }
+
+  .text-body-small {
+    @apply text-sm md:text-base leading-relaxed;
+  }
+
+  .text-caption {
+    @apply text-xs md:text-sm leading-normal;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -29,6 +79,59 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --spacing-xs: 0.5rem; /* 8px */
+    --spacing-sm: 1rem; /* 16px */
+    --spacing-md: 1.5rem; /* 24px */
+    --spacing-lg: 2rem; /* 32px */
+    --spacing-xl: 3rem; /* 48px */
+    --spacing-2xl: 5rem; /* 80px */
+    --radius-sm: 0.5rem; /* 8px */
+    --radius-md: 0.75rem; /* 12px */
+    --radius-lg: 1rem; /* 16px */
+    --radius-xl: 1.5rem; /* 24px */
+    --font-size-xs: 0.75rem; /* 12px */
+    --font-size-sm: 0.875rem; /* 14px */
+    --font-size-base: 1rem; /* 16px */
+    --font-size-lg: 1.125rem; /* 18px */
+    --font-size-xl: 1.25rem; /* 20px */
+    --font-size-2xl: 1.5rem; /* 24px */
+    --font-size-3xl: 1.875rem; /* 30px */
+    --font-size-4xl: 2.25rem; /* 36px */
+    --font-size-5xl: 3rem; /* 48px */
+    --font-size-6xl: 3.75rem; /* 60px */
+    --font-size-7xl: 4.5rem; /* 72px */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --brand-blue-50: 239 246 255;
+    --brand-blue-100: 219 234 254;
+    --brand-blue-200: 191 219 254;
+    --brand-blue-300: 147 197 253;
+    --brand-blue-400: 96 165 250;
+    --brand-blue-500: 59 130 246;
+    --brand-blue-600: 37 99 235;
+    --brand-blue-700: 29 78 216;
+    --brand-blue-800: 30 64 175;
+    --brand-blue-900: 30 58 138;
+    --brand-purple-50: 250 245 255;
+    --brand-purple-100: 243 232 255;
+    --brand-purple-200: 233 213 255;
+    --brand-purple-300: 196 181 253;
+    --brand-purple-400: 168 85 247;
+    --brand-purple-500: 147 51 234;
+    --brand-purple-600: 126 34 206;
+    --brand-purple-700: 107 33 168;
+    --brand-purple-800: 88 28 135;
+    --brand-purple-900: 59 7 100;
+    --success: 34 197 94;
+    --warning: 245 158 11;
+    --error: 239 68 68;
+    --info: 59 130 246;
   }
 
   .dark {
@@ -45,17 +148,26 @@
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent-foreground: 222.2 84% 4.9%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    --radius: 0.5rem;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -68,7 +180,75 @@
   }
 }
 
-/* Custom animations for infinite moving cards */
+/* Brand Gradient Utilities */
+@layer utilities {
+  .bg-brand-gradient-primary {
+    @apply bg-gradient-to-r from-blue-500 to-indigo-600;
+  }
+
+  .bg-brand-gradient-secondary {
+    @apply bg-gradient-to-r from-purple-600 to-pink-600;
+  }
+
+  .bg-brand-gradient-accent {
+    @apply bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-600;
+  }
+
+  .bg-brand-gradient-hero {
+    @apply bg-gradient-to-br from-gray-900 to-black;
+  }
+
+  .bg-brand-gradient-section {
+    @apply bg-gradient-to-br from-slate-900 to-gray-900;
+  }
+
+  .text-brand-gradient-primary {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400;
+  }
+
+  .text-brand-gradient-secondary {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400;
+  }
+
+  .text-brand-gradient-accent {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-600;
+  }
+}
+
+/* Glass Effect Utilities */
+@layer utilities {
+  .glass-card {
+    @apply backdrop-blur-sm bg-white/5 border border-white/10;
+  }
+
+  .glass-card-blue {
+    @apply backdrop-blur-sm bg-blue-900/20 border border-blue-800/50;
+  }
+
+  .glass-card-purple {
+    @apply backdrop-blur-sm bg-purple-900/20 border border-purple-800/50;
+  }
+
+  .glass-card-featured {
+    @apply backdrop-blur-sm bg-gradient-to-br from-purple-900/40 to-pink-900/40 border-2 border-purple-400/60;
+  }
+}
+
+/* Animation Utilities */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+}
+
 @keyframes scroll {
   0% {
     transform: translateX(0);
@@ -122,4 +302,35 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #718096;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

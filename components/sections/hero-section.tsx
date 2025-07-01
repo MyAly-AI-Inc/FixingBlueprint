@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
@@ -27,7 +26,7 @@ interface HeroSectionProps {
   }
   badge?: {
     text: string
-    variant?: "live" | "default"
+    variant?: "live" | "default" | "featured"
   }
 }
 
@@ -43,7 +42,7 @@ export function HeroSection({
   const isLive = variant === "live-challenge"
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-gray-900 to-black relative overflow-hidden flex flex-col justify-center">
+    <section className="min-h-screen bg-brand-gradient-hero relative overflow-hidden flex flex-col justify-center">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -94,7 +93,9 @@ export function HeroSection({
                 <span className="text-red-300 font-semibold text-lg">{badge.text}</span>
               </div>
             ) : (
-              <Badge className="bg-blue-900/30 text-blue-300 border-blue-700/50 mb-6">{badge.text}</Badge>
+              <Badge variant={badge.variant === "featured" ? "featured" : "blue"} size="lg" className="mb-6">
+                {badge.text}
+              </Badge>
             )}
           </motion.div>
         )}
@@ -106,9 +107,9 @@ export function HeroSection({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+          <h1 className="text-display-1 mb-8 leading-tight">
             <motion.span
-              className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-600"
+              className="block text-brand-gradient-accent"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
@@ -125,21 +126,19 @@ export function HeroSection({
             </motion.span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-blue-200 mb-8 font-semibold">{subtitle}</p>
+          <p className="text-body-large text-blue-200 mb-8 font-semibold">{subtitle}</p>
 
-          <p className="text-lg md:text-xl text-blue-100 mb-12 max-w-4xl mx-auto leading-relaxed">{description}</p>
+          <p className="text-body text-blue-100 mb-12 max-w-4xl mx-auto">{description}</p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             {primaryCta.href ? (
               <Link href={primaryCta.href}>
                 <Button
-                  size="lg"
-                  className={`${
-                    isLive
-                      ? "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700"
-                      : "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
-                  } text-white rounded-full px-10 py-6 text-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300`}
+                  size="xl"
+                  rounded="full"
+                  variant={isLive ? "secondary" : "default"}
+                  className="shadow-lg hover:shadow-xl"
                 >
                   {primaryCta.icon}
                   {primaryCta.text}
@@ -148,13 +147,11 @@ export function HeroSection({
               </Link>
             ) : (
               <Button
-                size="lg"
+                size="xl"
+                rounded="full"
                 onClick={primaryCta.onClick}
-                className={`${
-                  isLive
-                    ? "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700"
-                    : "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
-                } text-white rounded-full px-10 py-6 text-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300`}
+                variant={isLive ? "secondary" : "default"}
+                className="shadow-lg hover:shadow-xl"
               >
                 {primaryCta.icon}
                 {primaryCta.text}
@@ -164,11 +161,7 @@ export function HeroSection({
 
             {secondaryCta && (
               <Link href={secondaryCta.href || "#"}>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-blue-500 text-blue-300 hover:bg-blue-500/10 rounded-full px-10 py-6 text-xl bg-transparent"
-                >
+                <Button size="xl" rounded="full" variant="outline">
                   {secondaryCta.icon}
                   {secondaryCta.text}
                 </Button>
